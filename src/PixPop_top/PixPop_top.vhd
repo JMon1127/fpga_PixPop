@@ -27,10 +27,18 @@ use ieee.math_real.all;
 
 entity PixPop_top is
   port(
-    REF_CLK   : IN STD_LOGIC;
-    SYS_RST_N : IN STD_LOGIC
+    REF_CLK   : IN    STD_LOGIC;
+    SYS_RST_N : IN    STD_LOGIC;
 
     --will need ports for the camera interface
+    CAM_SCL   : OUT   STD_LOGIC; -- i2c clock for config
+    CAM_SDA   : INOUT STD_LOGIC; -- i2c ata bus for config
+    CAM_VSYNC : IN    STD_LOGIC; -- frame valid (active frame)
+    CAM_HREF  : IN    STD_LOGIC; -- line data valid (active pixels)
+    CAM_PCLK  : IN    STD_LOGIC; -- camera pixel clock
+    CAM_XCLK  : OUT   STD_LOGIC; -- camera input clock
+    CAM_DATA  : IN    STD_LOGIC_VECTOR(7 downto 0) -- 8 bit color data
+
     --eventually need to also transmit somehow
 
     -- since we arent having a soft core proc yet i think minimal control will be with switches on board
