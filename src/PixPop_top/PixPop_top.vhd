@@ -53,10 +53,16 @@ architecture structural of PixPop_top is
 
 begin
   -- TODO: will have a smart design here
+  -- this should drive the camera xclk
 
   -- TODO: need data receiver block
+  -- this should receive the camera sync/ref, pclk and data
+  -- also this will probably be a good spot to convert the parallel data to stream
 
   -- Will need a data proc block
+  -- here it will probably be a top level that selects between edge detect algo, normal color, or even grayscale
 
   -- will need a data transmit block
+  -- this should take the strem from data proc block and perform the transmit logic
+
 end structural;
