@@ -65,4 +65,4 @@ begin
   -- will need a data transmit block
   -- this should take the strem from data proc block and perform the transmit logic
 
-end structural;
+end architecture structural;
