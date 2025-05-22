@@ -46,7 +46,7 @@ entity PixPop_top is
   );
 end PixPop_top;
 
-architecture structural of PixPop_top is
+architecture rtl of PixPop_top is
   --------------------
   -- Signals
   --------------------
@@ -65,4 +65,4 @@ begin
   -- will need a data transmit block
   -- this should take the strem from data proc block and perform the transmit logic
 
-end architecture structural;
+end architecture rtl;

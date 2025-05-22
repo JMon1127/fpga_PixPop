@@ -40,7 +40,7 @@ entity cam_data_rcvr is
   );
 end cam_data_rcvr;
 
-architecture behavorial of cam_data_rcvr is
+architecture rtl of cam_data_rcvr is
   --------------------
   -- Types
   --------------------
@@ -137,7 +137,7 @@ begin
       if (s_cam_vsync_redge_flg = '1' and s_row_cnt /= c_max_row-1) then
         s_row_cnt <= s_row_cnt + 1;
       else
-        s_row_cnt = 0;
+        s_row_cnt <= 0;
       end if;
 
     end if;
@@ -200,4 +200,4 @@ begin
   -- i may have to do a line buffer implmentation instead
 
 
-end architecture behavorial;
+end architecture rtl;
