@@ -30,6 +30,37 @@ end tb_top;
 
 architecture behavorial of tb_top is
 
+  signal s_tb_sys_clk   : std_logic := '0';
+  signal s_tb_sys_rst_n : std_logic := '0';
+
 begin
 
+  -- generate a 50MHz clock to drive the sys clk input to the DUT
+  proc_tb_clkgen : process
+  begin
+    wait for 20 ns;
+    s_tb_sys_clk <= not s_tb_sys_clk;
+  end process proc_tb_clkgen;
+
+  -- wait for clock to be stable and release DUT from RST
+  proc_tb_rst : process
+  begin
+    wait for 400 ns; -- after 20 clock cycles release the DUT out of reset
+    s_tb_sys_rst_n <= '1';
+  end process;
+
+
+  -- TODO: will need some sort of model for the OV7670 camera
+
+  -- instantiat the dut
+  dut : entity work.PixPop_top
+  port map (
+    SYS_CLK     => s_tb_sys_clk,
+    SYS_RST_N   => s_tb_sys_rst_n,
+
+    I_CAM_DATA  =>
+    I_CAM_PCLK  =>
+    I_CAM_VSYNC =>
+    I_CAM_HREF  =>
+  );
 end behavorial;

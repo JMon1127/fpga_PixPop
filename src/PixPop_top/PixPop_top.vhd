@@ -58,7 +58,17 @@ begin
   -- TODO: need data receiver block
   -- this should receive the camera sync/ref, pclk and data
   -- also this will probably be a good spot to convert the parallel data to stream
+  -- Instantiate the data receiver block
+  u_cam_rcvr : entity work.cam_data_rcvr
+  port map (
+    SYS_CLK     => REF_CLK, -- TODO: make this a faster clock than the 50MHz
+    SYS_RST_N   => SYS_RST_N, -- TODO: may need ot get a reset that is synced to the PCLK domain
 
+    I_CAM_DATA  => CAM_DATA,
+    I_CAM_PCLK  => CAM_PCLK,
+    I_CAM_VSYNC => CAM_VSYNC,
+    I_CAM_HREF  => CAM_HREF
+  );
   -- Will need a data proc block
   -- here it will probably be a top level that selects between edge detect algo, normal color, or even grayscale
 
