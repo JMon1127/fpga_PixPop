@@ -32,12 +32,18 @@ entity ov7670_cam_model is
     O_CAM_DATA  : out std_logic_vector(7 downto 0);
     O_CAM_PCLK  : out std_logic;
     O_CAM_VSYNC : out std_logic;
-    O_CAM_HREF  : out std_logic;
+    O_CAM_HREF  : out std_logic
   );
 end ov7670_cam_model;
 
 architecture rtl of ov7670_cam_model is
 
 begin
+  O_CAM_PCLK <= I_CAM_XCLK; -- trying this for giggles
 
+  -- process to generate vsync output
+  -- acorrding to data sheet from rising edge to rising edge is 510*tline
+  -- vsync is only high for 3*tline.
+  -- once vsync goes low HREF should rise at 17*tline
+  -- tline = 784*tp where tp is 2*PCLK if RGB mode
 end architecture rtl;

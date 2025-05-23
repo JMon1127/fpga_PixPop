@@ -28,8 +28,8 @@ use ieee.math_real.all;
 
 entity cam_data_rcvr is
   port (
-    SYS_CLK   : in std_logic;
-    SYS_RST_N : in std_logic;
+    SYS_CLK     : in std_logic;
+    SYS_RST_N   : in std_logic;
 
     I_CAM_DATA  : in std_logic_vector(7 downto 0);
     I_CAM_PCLK  : in std_logic;
