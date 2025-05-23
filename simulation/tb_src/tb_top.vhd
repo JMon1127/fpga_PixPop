@@ -33,6 +33,12 @@ architecture behavorial of tb_top is
   signal s_tb_sys_clk   : std_logic := '0';
   signal s_tb_sys_rst_n : std_logic := '0';
 
+  signal s_tb_cam_xclk  : std_logic := '0';
+  signal s_tb_cam_data  : std_logic_vector(7 downto 0);
+  signal s_tb_cam_vsync : std_logic;
+  signal s_tb_cam_href  : std_logic;
+  signal s_tb_cam_pclk  : std_logic;
+
 begin
 
   -- generate a 50MHz clock to drive the sys clk input to the DUT
@@ -41,6 +47,13 @@ begin
     wait for 20 ns;
     s_tb_sys_clk <= not s_tb_sys_clk;
   end process proc_tb_clkgen;
+
+  -- generate a 24MHz clock to drive the camera model
+  proc_tb_xclkgen : process
+  begin
+    wait for 20.83 ns;
+    s_tb_cam_xclk <= not s_tb_cam_xclk;
+  end process proc_tb_xclkgen;
 
   -- wait for clock to be stable and release DUT from RST
   proc_tb_rst : process
@@ -51,16 +64,26 @@ begin
 
 
   -- TODO: will need some sort of model for the OV7670 camera
+  --instantiate the camera model
+  cam_model : entity work.ov7670_cam_model
+  port map (
+    I_CAM_XCLK  => s_tb_cam_xclk,
 
-  -- instantiat the dut
+    O_CAM_DATA  => s_tb_cam_data,
+    O_CAM_PCLK  => s_tb_cam_pclk,
+    O_CAM_VSYNC => s_tb_cam_vsync,
+    O_CAM_HREF  => s_tb_cam_href
+  );
+
+  -- instantiate the dut
   dut : entity work.PixPop_top
   port map (
     SYS_CLK     => s_tb_sys_clk,
     SYS_RST_N   => s_tb_sys_rst_n,
 
-    I_CAM_DATA  =>
-    I_CAM_PCLK  =>
-    I_CAM_VSYNC =>
-    I_CAM_HREF  =>
+    I_CAM_DATA  => s_tb_cam_data,
+    I_CAM_PCLK  => s_tb_cam_pclk,
+    I_CAM_VSYNC => s_tb_cam_vsync,
+    I_CAM_HREF  => s_tb_cam_href
   );
 end behavorial;
