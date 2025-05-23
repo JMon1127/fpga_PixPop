@@ -31,8 +31,8 @@ entity PixPop_top is
     SYS_RST_N : IN    STD_LOGIC;
 
     --will need ports for the camera interface
-    CAM_SCL   : OUT   STD_LOGIC; -- i2c clock for config
-    CAM_SDA   : INOUT STD_LOGIC; -- i2c ata bus for config
+    -- CAM_SCL   : OUT   STD_LOGIC; -- i2c clock for config
+    -- CAM_SDA   : INOUT STD_LOGIC; -- i2c ata bus for config
     CAM_VSYNC : IN    STD_LOGIC; -- frame valid (active frame)
     CAM_HREF  : IN    STD_LOGIC; -- line data valid (active pixels)
     CAM_PCLK  : IN    STD_LOGIC; -- camera pixel clock

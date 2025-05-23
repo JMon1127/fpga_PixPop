@@ -69,7 +69,7 @@ begin
   port map (
     I_CAM_XCLK  => s_tb_cam_xclk,
 
-    O_CAM_DATA  => s_tb_cam_data,
+    -- O_CAM_DATA  => s_tb_cam_data,
     O_CAM_PCLK  => s_tb_cam_pclk,
     O_CAM_VSYNC => s_tb_cam_vsync,
     O_CAM_HREF  => s_tb_cam_href
@@ -78,12 +78,12 @@ begin
   -- instantiate the dut
   dut : entity work.PixPop_top
   port map (
-    SYS_CLK     => s_tb_sys_clk,
+    REF_CLK     => s_tb_sys_clk,
     SYS_RST_N   => s_tb_sys_rst_n,
 
-    I_CAM_DATA  => s_tb_cam_data,
-    I_CAM_PCLK  => s_tb_cam_pclk,
-    I_CAM_VSYNC => s_tb_cam_vsync,
-    I_CAM_HREF  => s_tb_cam_href
+    CAM_DATA  => s_tb_cam_data,
+    CAM_PCLK  => s_tb_cam_pclk,
+    CAM_VSYNC => s_tb_cam_vsync,
+    CAM_HREF  => s_tb_cam_href
   );
 end behavorial;
