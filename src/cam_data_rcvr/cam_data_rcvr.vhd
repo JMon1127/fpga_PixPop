@@ -146,14 +146,20 @@ begin
   -- this process will drive the state machine through the states
   proc_sm_driver : process (I_CAM_PCLK, SYS_RST_N)
   begin
-    if(SYS_RST_N) then
+    if(SYS_RST_N = '0') then
       s_data_rcv_cur_state <= tIdle;
     elsif(rising_edge(I_CAM_PCLK)) then
       s_data_rcv_cur_state <= s_data_rcv_next_state;
     end if;
   end process proc_sm_driver;
 
-  proc_sm_logic : process (all)
+  proc_sm_logic : process ( s_data_rcv_cur_state,
+                            s_cam_vsync_redge_flg,
+                            I_CAM_DATA,
+                            I_CAM_HREF,
+                            s_col_cnt,
+                            s_row_cnt
+                          )
   begin
     -- prevent latching
     s_data_rcv_next_state <= s_data_rcv_cur_state;
