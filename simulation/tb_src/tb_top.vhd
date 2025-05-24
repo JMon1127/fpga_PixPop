@@ -44,7 +44,7 @@ begin
   -- generate a 50MHz clock to drive the sys clk input to the DUT
   proc_tb_clkgen : process
   begin
-    wait for 20 ns;
+    wait for 10 ns;
     s_tb_sys_clk <= not s_tb_sys_clk;
   end process proc_tb_clkgen;
 
