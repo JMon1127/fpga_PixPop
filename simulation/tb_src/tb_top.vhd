@@ -78,7 +78,7 @@ begin
     I_CAM_RST_N => s_tb_cam_rst_n,
     I_CAM_XCLK  => s_tb_cam_xclk,
 
-    -- O_CAM_DATA  => s_tb_cam_data,
+    O_CAM_DATA  => s_tb_cam_data,
     O_CAM_PCLK  => s_tb_cam_pclk,
     O_CAM_VSYNC => s_tb_cam_vsync,
     O_CAM_HREF  => s_tb_cam_href
