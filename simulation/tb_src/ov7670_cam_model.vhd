@@ -52,6 +52,8 @@ architecture rtl of ov7670_cam_model is
   signal s_vsync_hi_cntr : integer := 0;
   signal s_vsync_lo_cntr : integer := 0;
   signal s_href_cntr     : integer := 0;
+  signal s_thref_cntr    : integer := 0;
+  signal s_end_cntr      : integer := 0;
 
 begin
 
@@ -82,6 +84,13 @@ begin
             s_vsync_lo_cntr <= s_vsync_lo_cntr + 1;
           end if;
         when tHref        =>
+          if(s_thref_cntr = 752640 - 1) then
+            s_thref_cntr <= 0;
+            s_drive_cam <= tFrame_end;
+          else
+            s_thref_cntr <= s_thref_cntr + 1;
+          end if;
+
           if(s_href_cntr = 1568 - 1) then
             s_href_cntr <= 0;
           else
@@ -94,6 +103,12 @@ begin
             s_href <= '0';
           end if;
         when tFrame_end   =>
+          if(s_end_cntr = 15680 -1) then
+            s_end_cntr <= 0;
+            s_drive_cam <= tVsync_pulse;
+          else
+            s_end_cntr <= s_end_cntr + 1;
+          end if;
       end case;
     end if;
   end process;
