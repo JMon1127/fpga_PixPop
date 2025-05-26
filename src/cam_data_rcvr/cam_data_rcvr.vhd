@@ -66,6 +66,8 @@ architecture rtl of cam_data_rcvr is
   signal s_cam_vsync_prev      : std_logic; -- used for rising edge detect
   signal s_cam_href_prev       : std_logic; -- used for rising edge detect
 
+  signal s_pix_msb             : std_logic_vector( 7 downto 0); -- stores the most significant byte of pixel data
+  signal s_pix_cap_msb         : std_logic;                     -- msB should be captured
   signal s_pix_data            : std_logic_vector(15 downto 0);
 
   -- TODO: will need some counters to keep track of row/col or maybe even just total pixel
@@ -91,6 +93,9 @@ begin
   begin
     if(s_rst_n_slow = '0') then
       s_cam_data_rcvr <= tIdleVsync;
+      s_pix_data      <= (others => '0');
+      s_pix_msb       <= (others => '0');
+      s_pix_cap_msb   <= '0';
     elsif(rising_edge(I_CAM_PCLK)) then
       case s_cam_data_rcvr is
         when tIdleVsync   =>
@@ -105,13 +110,25 @@ begin
           s_cam_href_prev <= I_CAM_HREF;
 
           if(s_cam_href_prev = '0' and I_CAM_HREF = '1') then
+            -- TODO: at this point there is valid data on the bus
+            s_pix_msb       <= I_CAM_DATA;
+            s_pix_cap_msb   <= '0';
             s_cam_data_rcvr <= tDataCapture;
           end if;
         when tDataCapture =>
-
+          -- check if msB should be captured or form full pixel word data
+          if(s_pix_cap_msb = '1') then
+            s_pix_msb     <= I_CAM_DATA;
+            s_pix_cap_msb <= '0';
+          else
+            s_pix_data    <= s_pix_msb & I_CAM_DATA;
+            s_pix_cap_msb <= '1';
+          end if;
+          s_cam_data_rcvr    <= tDataCapture;
       end case;
     end if;
   end process;
+
   -- TODO: once data is sampled it should then be crossed to the system clock
   -- I'm thinking of using a dual clock fifo
   -- but it may be a good idea to just use BRAM will have to check if microsemi has dual port/clock bram
