@@ -51,8 +51,8 @@ architecture rtl of cam_data_rcvr is
   --------------------
   -- Constants
   --------------------
-  constant c_max_row : integer := 480;
-  constant c_max_col : integer := 640;
+  constant c_row               : integer := 480;
+  constant c_col               : integer := 640;
 
   --------------------
   -- Signals
@@ -69,6 +69,9 @@ architecture rtl of cam_data_rcvr is
   signal s_pix_msb             : std_logic_vector( 7 downto 0); -- stores the most significant byte of pixel data
   signal s_pix_cap_msb         : std_logic;                     -- msB should be captured
   signal s_pix_data            : std_logic_vector(15 downto 0);
+  signal s_col_cntr            : integer := 0;
+  signal s_row_cntr            : integer := 0;
+  signal s_pix_valid           : std_logic; -- indicates a captured pixel is valid
 
   -- TODO: will need some counters to keep track of row/col or maybe even just total pixel
 
@@ -96,6 +99,10 @@ begin
       s_pix_data      <= (others => '0');
       s_pix_msb       <= (others => '0');
       s_pix_cap_msb   <= '0';
+      s_cam_href_prev <= '0';
+      s_col_cntr      <= 0;
+      s_row_cntr      <= 0;
+      s_pix_valid     <= '0';
     elsif(rising_edge(I_CAM_PCLK)) then
       case s_cam_data_rcvr is
         when tIdleVsync   =>
@@ -113,6 +120,7 @@ begin
             -- TODO: at this point there is valid data on the bus
             s_pix_msb       <= I_CAM_DATA;
             s_pix_cap_msb   <= '0';
+            s_cam_href_prev <= '0';
             s_cam_data_rcvr <= tDataCapture;
           end if;
         when tDataCapture =>
@@ -122,9 +130,24 @@ begin
             s_pix_cap_msb <= '0';
           else
             s_pix_data    <= s_pix_msb & I_CAM_DATA;
+            s_col_cntr    <= s_col_cntr + 1;
             s_pix_cap_msb <= '1';
+            --assert pixel valid if active
+            if(s_col_cntr <= c_col - 1) then
+              s_pix_valid <= '1';
+            else
+              s_pix_valid <= '0';
+            end if;
+
+            if(s_row_cntr = c_row - 1) then
+              s_row_cntr <= 0;
+              s_cam_data_rcvr <= tIdleVsync;
+            elsif(s_col_cntr = c_col) then
+              s_row_cntr <= s_row_cntr + 1;
+              s_col_cntr <= 0;
+            end if;
           end if;
-          s_cam_data_rcvr    <= tDataCapture;
+
       end case;
     end if;
   end process;
