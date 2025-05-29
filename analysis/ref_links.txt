@@ -1,0 +1,6 @@
+talks about line buffs and conv :
+https://github.com/oneapi-src/oneAPI-samples/tree/release/2024.1/DirectProgramming/C%2B%2BSYCL_FPGA/ReferenceDesigns/convolution2d
+
+talks about edge detection in rgb :
+https://soumyadutta-cse.github.io/papers/edge_detection_rgb_space_artcom2009.pdf
+
