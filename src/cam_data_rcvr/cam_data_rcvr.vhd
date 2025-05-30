@@ -151,13 +151,12 @@ begin
     end if;
   end process;
 
-  -- TODO: once data is sampled it should then be crossed to the system clock
+  -- TODO: once data is sampled it should then be crossed to the system clock 125MHz
   -- I'm thinking of using a dual clock fifo
-  -- but it may be a good idea to just use BRAM will have to check if microsemi has dual port/clock bram
-  -- igloo2 seems to call them LSRAM, once the data is set an address and write enable must be set too
-  -- the camera outputs 640x480 pixels so 307200 total. each pixel is 2 bytes so 614400 total bytes
-  -- it seems that the lsram would not be able to hold a full frame...
-  -- i may have to do a line buffer implmentation instead
+  -- From there the data will be passed to a line buffer module
+  -- great it seems that microsemi does not have a streaming fifo...
+  -- i will probably have to use their CoreFIFO ip and add my own logic to make it streaming... smh
+
 
 
 end architecture rtl;
