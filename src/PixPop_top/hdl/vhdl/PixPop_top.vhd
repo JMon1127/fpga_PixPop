@@ -50,10 +50,29 @@ architecture rtl of PixPop_top is
   --------------------
   -- Signals
   --------------------
+  signal s_sys_clk    : std_logic;
+  signal s_clk_lock   : std_logic;
+  signal s_safe_rst_n : std_logic;
 
 begin
   -- TODO: will have a smart design here
   -- this should drive the camera xclk
+  u_clk_mgr : entity work.clocks_wrap
+  port map (
+    I_REF_CLK => REF_CLK,
+    O_SYS_CLK => s_sys_clk,
+    O_LOCK    => s_clk_lock
+  );
+
+  -- only let out of reset once PLL is locked
+  proc_rst_lock : process (REF_CLK)
+  begin
+    if(SYS_RST_N = '1' and s_clk_lock = '1') then
+      s_safe_rst_n <= '1';
+    else
+      s_safe_rst_n <= '0';
+    end if;
+  end process;
 
   -- TODO: need data receiver block
   -- this should receive the camera sync/ref, pclk and data
@@ -61,8 +80,8 @@ begin
   -- Instantiate the data receiver block
   u_cam_rcvr : entity work.cam_data_rcvr
   port map (
-    SYS_CLK     => REF_CLK, -- TODO: make this a faster clock than the 50MHz
-    SYS_RST_N   => SYS_RST_N, -- TODO: may need ot get a reset that is synced to the PCLK domain
+    SYS_CLK     => s_sys_clk, -- TODO: make this a faster clock than the 50MHz
+    SYS_RST_N   => s_safe_rst_n, -- TODO: may need ot get a reset that is synced to the PCLK domain
 
     I_CAM_DATA  => CAM_DATA,
     I_CAM_PCLK  => CAM_PCLK,

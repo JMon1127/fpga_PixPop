@@ -85,6 +85,7 @@ begin
     Q        => O_PIXEL_DATA
   );
 
+  -- TODO: may be better to use the empty signal instead of almost empty that way you dont miss last few pix from frame.
   proc_rd_fifo : process (I_SYS_CLK, I_SYS_RST_N)
   begin
     if(I_SYS_RST_N = '0') then
