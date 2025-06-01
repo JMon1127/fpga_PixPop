@@ -34,9 +34,11 @@ entity cam_data_rcvr is
     I_CAM_DATA  : in std_logic_vector(7 downto 0);
     I_CAM_PCLK  : in std_logic;
     I_CAM_VSYNC : in std_logic;
-    I_CAM_HREF  : in std_logic
+    I_CAM_HREF  : in std_logic;
 
     -- output stream interface
+    O_PIX_DATA  : out std_logic_vector(15 downto 0);
+    O_PIX_VALID : out std_logic
   );
 end cam_data_rcvr;
 
@@ -156,7 +158,18 @@ begin
   -- From there the data will be passed to a line buffer module
   -- great it seems that microsemi does not have a streaming fifo...
   -- i will probably have to use their CoreFIFO ip and add my own logic to make it streaming... smh
+  u_cam_data_cdc : entity work.cam_data_cdc_wrap
+  port map (
+    I_PIXEL_DATA  => s_pix_data,
+    I_PIXEL_VALID => s_pix_valid,
+    I_PIXEL_CLK   => I_CAM_PCLK,
+    I_PIXEL_RST_N => s_rst_n_slow,
+    I_SYS_CLK     => SYS_CLK,
+    I_SYS_RST_N   => SYS_RST_N,
 
+    O_PIXEL_DATA  => O_PIX_DATA,
+    O_PIXEL_VALID => O_PIX_VALID
+  );
 
 
 end architecture rtl;

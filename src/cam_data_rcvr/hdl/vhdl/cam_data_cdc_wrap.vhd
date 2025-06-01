@@ -36,16 +36,39 @@ entity cam_data_cdc_wrap is
 
     O_PIXEL_DATA  : out std_logic_vector(15 downto 0);
     O_PIXEL_VALID : out std_logic
-
   );
   end cam_data_cdc_wrap;
 
 architecture rtl of cam_data_cdc_wrap is
+
+  component cam_data_cdc
+    port (
+      DATA     : in std_logic_vector(15 downto 0);
+      RCLOCK   : in std_logic;
+      RE       : in std_logic;
+      RRESET_N : in std_logic;
+      WCLOCK   : in std_logic;
+      WE       : in std_logic;
+      WRESET_N : in std_logic;
+
+      AEMPTY   : out std_logic;
+      DVLD     : out std_logic;
+      EMPTY    : out std_logic;
+      FULL     : out std_logic;
+      Q        : out std_logic_vector(15 downto 0)
+    );
+    end component cam_data_cdc;
+
   signal s_fifo_rd_en       : std_logic;
-  signal s_fifo_aempty_flg : std_logic;
+  signal s_fifo_aempty_flg  : std_logic;
+
+  -- TODO: remove
+  signal s_fifo_empty : std_logic;
+  signal s_fifo_full : std_logic;
+
 begin
   -- TODO: add logic to make the fifo streaming
-  u_cam_data_cdc : entity work.cam_data_cdc
+  u_cam_data_cdc_fifo : cam_data_cdc
   port map (
     DATA     => I_PIXEL_DATA,
     RCLOCK   => I_PIXEL_CLK,
@@ -57,9 +80,23 @@ begin
 
     AEMPTY   => s_fifo_aempty_flg,
     DVLD     => O_PIXEL_VALID,
-    EMPTY    => open,
-    FULL     => open,
+    EMPTY    => s_fifo_empty,
+    FULL     => s_fifo_full,
     Q        => O_PIXEL_DATA
   );
+
+  proc_rd_fifo : process (I_SYS_CLK, I_SYS_RST_N)
+  begin
+    if(I_SYS_RST_N = '0') then
+      s_fifo_rd_en <= '0';
+    elsif(rising_edge(I_SYS_CLK)) then
+      -- as long as fifo is not almost empty then keep reading from it
+      if(s_fifo_aempty_flg = '0') then
+        s_fifo_rd_en <= '1';
+      else
+        s_fifo_rd_en <= '0';
+      end if;
+    end if;
+  end process;
 
 end architecture rtl;

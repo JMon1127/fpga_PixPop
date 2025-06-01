@@ -67,7 +67,10 @@ begin
     I_CAM_DATA  => CAM_DATA,
     I_CAM_PCLK  => CAM_PCLK,
     I_CAM_VSYNC => CAM_VSYNC,
-    I_CAM_HREF  => CAM_HREF
+    I_CAM_HREF  => CAM_HREF,
+
+    O_PIX_DATA  => open,
+    O_PIX_VALID => open
   );
   -- Will need a data proc block
   -- here it will probably be a top level that selects between edge detect algo, normal color, or even grayscale
