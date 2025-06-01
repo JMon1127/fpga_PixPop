@@ -106,6 +106,8 @@ begin
       s_row_cntr      <= 0;
       s_pix_valid     <= '0';
     elsif(rising_edge(I_CAM_PCLK)) then
+      s_pix_valid <= '0';
+
       case s_cam_data_rcvr is
         when tIdleVsync   =>
           -- sample vsync in order to detect rising edge and advance state
@@ -126,7 +128,6 @@ begin
           end if;
         when tDataCapture =>
           s_cam_href_prev <= I_CAM_HREF;
-          s_pix_valid     <= s_cam_href_prev; -- indicate a valid pixel was captured
 
           -- check if msB should be captured or form full pixel word data
           if(s_pix_cap_msb = '1') then
@@ -134,8 +135,9 @@ begin
             s_pix_cap_msb <= '0';
           else
             if(s_cam_href_prev = '1') then
-              s_pix_data    <= s_pix_msb & I_CAM_DATA;
-              s_col_cntr    <= s_col_cntr + 1;
+              s_pix_data  <= s_pix_msb & I_CAM_DATA;
+              s_pix_valid <= '1'; -- testing to see if assert for only 1 clk
+              s_col_cntr  <= s_col_cntr + 1;
             end if;
 
             if(s_row_cntr = c_row) then

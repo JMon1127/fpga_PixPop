@@ -71,10 +71,10 @@ begin
   u_cam_data_cdc_fifo : cam_data_cdc
   port map (
     DATA     => I_PIXEL_DATA,
-    RCLOCK   => I_PIXEL_CLK,
+    RCLOCK   => I_SYS_CLK,
     RE       => s_fifo_rd_en,
     RRESET_N => I_SYS_RST_N,
-    WCLOCK   => I_SYS_CLK,
+    WCLOCK   => I_PIXEL_CLK,
     WE       => I_PIXEL_VALID, -- write to the fifo whenever pixel is valid
     WRESET_N => I_PIXEL_RST_N,
 
