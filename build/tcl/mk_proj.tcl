@@ -29,3 +29,43 @@ new_project -location {..\PixPop_fpga} \
             -adv_options {VCCI_3.3_VOLTR:COM} \
             -adv_options {VOLTR:COM} \
 
+# Add source files here. These are remote links
+create_links \
+            -convert_EDN_to_HDL 0 \
+            -hdl_source {../../src/PixPop_top/hdl/vhdl/PixPop_top.vhd}\
+            -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_rcvr.vhd}
+
+# Add simulation files here. These are remote links
+create_links \
+            -convert_EDN_to_HDL 0 \
+            -stimulus {../../simulation/tb_src/ov7670_cam_model.vhd} \
+            -stimulus {../../simulation/tb_src/tb_top.vhd}
+
+# this builds the hierarchy
+build_design_hierarchy
+
+# this sets the top level as root
+set_root -module {PixPop_top::work}
+
+# this sets up the active stimulus
+organize_tool_files -tool {SIM_PRESYNTH} \
+                    -file {../../simulation/tb_src/ov7670_cam_model.vhd} \
+                    -file {../../simulation/tb_src/tb_top.vhd} \
+                    -module {PixPop_top::work} \
+                    -input_type {stimulus}
+
+organize_tool_files -tool {SIM_POSTSYNTH} \
+                    -file {../../simulation/tb_src/ov7670_cam_model.vhd} \
+                    -file {../../simulation/tb_src/tb_top.vhd} \
+                    -module {PixPop_top::work} \
+                    -input_type {stimulus}
+
+organize_tool_files -tool {SIM_POSTLAYOUT} \
+                    -file {../../simulation/tb_src/ov7670_cam_model.vhd} \
+                    -file {../../simulation/tb_src/tb_top.vhd} \
+                    -module {PixPop_top::work} \
+                    -input_type {stimulus}
+
+source cam_data_cdc.tcl
+
+save_project
