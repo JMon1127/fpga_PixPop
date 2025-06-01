@@ -50,18 +50,22 @@ architecture rtl of PixPop_top is
   --------------------
   -- Signals
   --------------------
-  signal s_sys_clk    : std_logic;
-  signal s_clk_lock   : std_logic;
-  signal s_safe_rst_n : std_logic;
+  signal s_sys_clk       : std_logic;
+  signal s_clk_lock      : std_logic;
+  signal s_safe_rst_n    : std_logic;
+
+  signal s_cam_src_data  : std_logic_vector(15 downto 0);
+  signal s_cam_src_valid : std_logic;
 
 begin
   -- TODO: will have a smart design here
   -- this should drive the camera xclk
   u_clk_mgr : entity work.clocks_wrap
   port map (
-    I_REF_CLK => REF_CLK,
-    O_SYS_CLK => s_sys_clk,
-    O_LOCK    => s_clk_lock
+    I_REF_CLK  => REF_CLK,
+    O_SYS_CLK  => s_sys_clk,
+    O_CAM_XCLK => CAM_XCLK,
+    O_LOCK     => s_clk_lock
   );
 
   -- only let out of reset once PLL is locked
@@ -88,8 +92,8 @@ begin
     I_CAM_VSYNC => CAM_VSYNC,
     I_CAM_HREF  => CAM_HREF,
 
-    O_PIX_DATA  => open,
-    O_PIX_VALID => open
+    O_PIX_DATA  => s_cam_src_data,
+    O_PIX_VALID => s_cam_src_valid
   );
   -- Will need a data proc block
   -- here it will probably be a top level that selects between edge detect algo, normal color, or even grayscale

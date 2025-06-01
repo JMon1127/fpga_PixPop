@@ -51,7 +51,6 @@ architecture rtl of cam_data_cdc_wrap is
       WE       : in std_logic;
       WRESET_N : in std_logic;
 
-      AEMPTY   : out std_logic;
       DVLD     : out std_logic;
       EMPTY    : out std_logic;
       FULL     : out std_logic;
@@ -59,8 +58,7 @@ architecture rtl of cam_data_cdc_wrap is
     );
     end component cam_data_cdc;
 
-  signal s_fifo_rd_en       : std_logic;
-  signal s_fifo_aempty_flg  : std_logic;
+  signal s_fifo_rd_en : std_logic;
 
   -- TODO: remove
   signal s_fifo_empty : std_logic;
@@ -78,21 +76,19 @@ begin
     WE       => I_PIXEL_VALID, -- write to the fifo whenever pixel is valid
     WRESET_N => I_PIXEL_RST_N,
 
-    AEMPTY   => s_fifo_aempty_flg,
     DVLD     => O_PIXEL_VALID,
     EMPTY    => s_fifo_empty,
     FULL     => s_fifo_full,
     Q        => O_PIXEL_DATA
   );
 
-  -- TODO: may be better to use the empty signal instead of almost empty that way you dont miss last few pix from frame.
   proc_rd_fifo : process (I_SYS_CLK, I_SYS_RST_N)
   begin
     if(I_SYS_RST_N = '0') then
       s_fifo_rd_en <= '0';
     elsif(rising_edge(I_SYS_CLK)) then
-      -- as long as fifo is not almost empty then keep reading from it
-      if(s_fifo_aempty_flg = '0') then
+      -- as long as fifo is not empty then keep reading from it
+      if(s_fifo_empty = '0') then
         s_fifo_rd_en <= '1';
       else
         s_fifo_rd_en <= '0';

@@ -35,8 +35,8 @@ create_and_configure_core -core_vlnv {Actel:SgCore:FCCC:2.0.201} -component_name
 "GL1_IN_0_SRC:PLL"  \
 "GL1_IN_1_SRC:UNUSED"  \
 "GL1_IS_INVERTED:false"  \
-"GL1_IS_USED:false"  \
-"GL1_OUT_0_FREQ:100"  \
+"GL1_IS_USED:true"  \
+"GL1_OUT_0_FREQ:24"  \
 "GL1_OUT_1_FREQ:50"  \
 "GL1_OUT_IS_GATED:false"  \
 "GL1_PLL_IN_0_PHASE:0"  \
@@ -69,12 +69,12 @@ create_and_configure_core -core_vlnv {Actel:SgCore:FCCC:2.0.201} -component_name
 "GL3_OUT_IS_GATED:false"  \
 "GL3_PLL_IN_0_PHASE:0"  \
 "GL3_PLL_IN_1_PHASE:0"  \
-"GPD0_IS_USED:false"  \
+"GPD0_IS_USED:true"  \
 "GPD0_NOPIPE_RSTSYNC:true"  \
-"GPD0_SYNC_STYLE:G3STYLE_AND_NO_LOCK_RSTSYNC"  \
-"GPD1_IS_USED:false"  \
+"GPD0_SYNC_STYLE:G3STYLE_AND_LOCK_RSTSYNC"  \
+"GPD1_IS_USED:true"  \
 "GPD1_NOPIPE_RSTSYNC:true"  \
-"GPD1_SYNC_STYLE:G3STYLE_AND_NO_LOCK_RSTSYNC"  \
+"GPD1_SYNC_STYLE:G3STYLE_AND_LOCK_RSTSYNC"  \
 "GPD2_IS_USED:false"  \
 "GPD2_NOPIPE_RSTSYNC:true"  \
 "GPD2_SYNC_STYLE:G3STYLE_AND_NO_LOCK_RSTSYNC"  \
@@ -83,7 +83,7 @@ create_and_configure_core -core_vlnv {Actel:SgCore:FCCC:2.0.201} -component_name
 "GPD3_SYNC_STYLE:G3STYLE_AND_NO_LOCK_RSTSYNC"  \
 "GPD_EXPOSE_RESETS:false"  \
 "GPD_SYNC_STYLE:G3STYLE_AND_LOCK_RSTSYNC"  \
-"INIT:0000007FB8000044974000318C6318C1F18C61F00404040400401"  \
+"INIT:0000007FB8000044174000F18C6309C231839DF00404681401801"  \
 "IO_HARDWIRED_0_IS_DIFF:false"  \
 "IO_HARDWIRED_1_IS_DIFF:false"  \
 "IO_HARDWIRED_2_IS_DIFF:false"  \
@@ -115,7 +115,7 @@ create_and_configure_core -core_vlnv {Actel:SgCore:FCCC:2.0.201} -component_name
 "PLL_VCO_TARGET:700"  \
 "RCOSC_1MHZ_IS_USED:false"  \
 "RCOSC_25_50MHZ_IS_USED:false"  \
-"VCOFREQUENCY:500.000"  \
+"VCOFREQUENCY:625.000"  \
 "XTLOSC_IS_USED:false"  \
 "Y0_IS_USED:false"  \
 "Y1_IS_USED:false"  \

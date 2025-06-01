@@ -27,9 +27,10 @@ use ieee.math_real.all;
 
 entity clocks_wrap is
   port (
-    I_REF_CLK : in std_logic;
-    O_SYS_CLK : out std_logic;
-    O_LOCK    : out std_logic
+    I_REF_CLK  : in std_logic;
+    O_SYS_CLK  : out std_logic;
+    O_CAM_XCLK : out std_logic;
+    O_LOCK     : out std_logic
   );
   end clocks_wrap;
 
@@ -39,6 +40,7 @@ architecture rtl of clocks_wrap is
     port (
       CLK0 : in std_logic;
       GL0  : out std_logic;
+      GL1  : out std_logic;
       LOCK : out std_logic
     );
   end component FCCC_C0;
@@ -49,6 +51,7 @@ begin
   port map (
     CLK0 => I_REF_CLK,
     GL0  => O_SYS_CLK,
+    GL1  => O_CAM_XCLK,
     LOCK => O_LOCK
   );
 

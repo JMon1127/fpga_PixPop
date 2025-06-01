@@ -3,7 +3,7 @@
 # Part Number: M2GL010T-FG484
 # Create and Configure the core component cam_data_cdc
 create_and_configure_core -core_vlnv {Actel:DirectCore:COREFIFO:3.1.101} -component_name {cam_data_cdc} -params {\
-"AE_STATIC_EN:true"  \
+"AE_STATIC_EN:false"  \
 "AEVAL:4"  \
 "AF_STATIC_EN:false"  \
 "AFVAL:60"  \
