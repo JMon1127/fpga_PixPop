@@ -82,18 +82,6 @@ begin
     Q        => O_PIXEL_DATA
   );
 
-  proc_rd_fifo : process (I_SYS_CLK, I_SYS_RST_N)
-  begin
-    if(I_SYS_RST_N = '0') then
-      s_fifo_rd_en <= '0';
-    elsif(rising_edge(I_SYS_CLK)) then
-      -- as long as fifo is not empty then keep reading from it
-      if(s_fifo_empty = '0') then
-        s_fifo_rd_en <= '1';
-      else
-        s_fifo_rd_en <= '0';
-      end if;
-    end if;
-  end process;
+  s_fifo_rd_en <= '1' when s_fifo_empty = '0' else '0';
 
 end architecture rtl;

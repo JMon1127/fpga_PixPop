@@ -50,16 +50,16 @@ begin
   end process proc_tb_clkgen;
 
   -- generate a 24MHz clock to drive the camera model
-  proc_tb_xclkgen : process
-  begin
-    wait for 20.83 ns;
-    s_tb_cam_xclk <= not s_tb_cam_xclk;
-  end process proc_tb_xclkgen;
+  -- proc_tb_xclkgen : process
+  -- begin
+  --   wait for 20.83 ns;
+  --   s_tb_cam_xclk <= not s_tb_cam_xclk;
+  -- end process proc_tb_xclkgen;
 
-  -- release camera model out of reset before the DUT
+  -- release camera model out of reset shortly after the DUT
   proc_tb_cam_rst : process
   begin
-    wait for 300 ns;
+    wait for 450 ns;
     s_tb_cam_rst_n <= '1';
   end process proc_tb_cam_rst;
 
@@ -87,11 +87,12 @@ begin
   -- instantiate the dut
   dut : entity work.PixPop_top
   port map (
-    REF_CLK     => s_tb_sys_clk,
-    SYS_RST_N   => s_tb_sys_rst_n,
+    REF_CLK   => s_tb_sys_clk,
+    SYS_RST_N => s_tb_sys_rst_n,
 
     CAM_DATA  => s_tb_cam_data,
     CAM_PCLK  => s_tb_cam_pclk,
+    CAM_XCLK  => s_tb_cam_xclk,
     CAM_VSYNC => s_tb_cam_vsync,
     CAM_HREF  => s_tb_cam_href
   );
