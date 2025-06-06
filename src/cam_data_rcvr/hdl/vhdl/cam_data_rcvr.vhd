@@ -46,39 +46,40 @@ architecture rtl of cam_data_rcvr is
   --------------------
   -- Types
   --------------------
-  type sm_cam_rcvr is ( tIdleVsync, -- waits for vsync pulse
-                        tIdleHref,  -- waits for Href start
-                        tDataCapture
+  type sm_cam_rcvr is ( tIdleVsync,  -- waits for vsync pulse
+                        tIdleHref,   -- waits for Href start
+                        tDataCapture -- capturing data and forming 2 byte pixels
                       );
+
   --------------------
   -- Constants
   --------------------
-  constant c_row               : integer := 480;
-  constant c_col               : integer := 640;
+  constant c_row               : integer := 480; -- total number of active rows
+  constant c_col               : integer := 640; -- total number of active columns
 
   --------------------
   -- Signals
   --------------------
   signal s_cam_data_rcvr       : sm_cam_rcvr := tIdleVsync;
 
+  --TODO: handles reset sync to pix clock domain, may remove once ip is added in the clock wrapper
   signal s_sys_rst_n_dly       : std_logic;
   signal s_rst_n_sync1         : std_logic;
   signal s_rst_n_slow          : std_logic;
 
-  signal s_cam_vsync_prev      : std_logic; -- used for rising edge detect
-  signal s_cam_href_prev       : std_logic; -- used for rising edge detect
+  signal s_cam_vsync_prev      : std_logic; -- used for rising edge detect of vsync
+  signal s_cam_href_prev       : std_logic; -- used for rising edge detect of href
 
   signal s_pix_msb             : std_logic_vector( 7 downto 0); -- stores the most significant byte of pixel data
-  signal s_pix_cap_msb         : std_logic;                     -- msB should be captured
-  signal s_pix_data            : std_logic_vector(15 downto 0);
-  signal s_col_cntr            : integer := 0;
-  signal s_row_cntr            : integer := 0;
-  signal s_pix_valid           : std_logic; -- indicates a captured pixel is valid
-
-  -- TODO: will need some counters to keep track of row/col or maybe even just total pixel
+  signal s_pix_cap_msb         : std_logic;                     -- indicates msB should be captured
+  signal s_pix_data            : std_logic_vector(15 downto 0); -- 2 byte pixel data
+  signal s_pix_valid           : std_logic;                     -- indicates a captured pixel is valid
+  signal s_col_cntr            : integer := 0;                  -- counter to track columns
+  signal s_row_cntr            : integer := 0;                  -- counter to track rows
 
 begin
-  --TODO: sync the reset to the slower clock
+
+  --TODO: remove once reset sync ip is added
   proc_rst_dly : process (SYS_CLK)
   begin
     if(rising_edge(SYS_CLK)) then
@@ -94,6 +95,7 @@ begin
     end if;
   end process;
 
+  -- State machine to capture data
   proc_cam_data_rcvr : process (s_rst_n_slow, I_CAM_PCLK)
   begin
     if(s_rst_n_slow = '0') then
@@ -106,6 +108,7 @@ begin
       s_row_cntr      <= 0;
       s_pix_valid     <= '0';
     elsif(rising_edge(I_CAM_PCLK)) then
+      -- default state for pixel valid
       s_pix_valid <= '0';
 
       case s_cam_data_rcvr is
@@ -121,7 +124,7 @@ begin
           s_cam_href_prev <= I_CAM_HREF;
 
           if(s_cam_href_prev = '0' and I_CAM_HREF = '1') then
-            -- TODO: at this point there is valid data on the bus
+            -- at this point there is valid data on the bus so capture it
             s_pix_msb       <= I_CAM_DATA;
             s_pix_cap_msb   <= '0';
             s_cam_data_rcvr <= tDataCapture;
@@ -136,7 +139,7 @@ begin
           else
             if(s_cam_href_prev = '1') then
               s_pix_data  <= s_pix_msb & I_CAM_DATA;
-              s_pix_valid <= '1'; -- testing to see if assert for only 1 clk
+              s_pix_valid <= '1';
               s_col_cntr  <= s_col_cntr + 1;
             end if;
 
@@ -155,11 +158,8 @@ begin
     end if;
   end process;
 
-  -- TODO: once data is sampled it should then be crossed to the system clock 125MHz
-  -- I'm thinking of using a dual clock fifo
-  -- From there the data will be passed to a line buffer module
-  -- great it seems that microsemi does not have a streaming fifo...
-  -- i will probably have to use their CoreFIFO ip and add my own logic to make it streaming... smh
+  -- Instantiate CDC wrapper
+  -- Contains dual clock FIFO with write/read logic to handle domain cross safely
   u_cam_data_cdc : entity work.cam_data_cdc_wrap
   port map (
     I_PIXEL_DATA  => s_pix_data,
@@ -172,6 +172,5 @@ begin
     O_PIXEL_DATA  => O_PIX_DATA,
     O_PIXEL_VALID => O_PIX_VALID
   );
-
 
 end architecture rtl;

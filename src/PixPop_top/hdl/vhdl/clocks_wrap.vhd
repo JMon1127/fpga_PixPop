@@ -34,7 +34,6 @@ entity clocks_wrap is
   end clocks_wrap;
 
 architecture rtl of clocks_wrap is
-
   --------------------
   -- Components
   --------------------

@@ -41,7 +41,6 @@ entity cam_data_cdc_wrap is
   end cam_data_cdc_wrap;
 
 architecture rtl of cam_data_cdc_wrap is
-
   --------------------
   -- Components
   --------------------
