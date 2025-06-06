@@ -29,7 +29,9 @@ entity tb_top is
 end tb_top;
 
 architecture behavorial of tb_top is
-
+  --------------------
+  -- Signals
+  --------------------
   signal s_tb_sys_clk   : std_logic := '0';
   signal s_tb_sys_rst_n : std_logic := '0';
 
@@ -49,12 +51,12 @@ begin
     s_tb_sys_clk <= not s_tb_sys_clk;
   end process proc_tb_clkgen;
 
-  -- generate a 24MHz clock to drive the camera model
-  -- proc_tb_xclkgen : process
-  -- begin
-  --   wait for 20.83 ns;
-  --   s_tb_cam_xclk <= not s_tb_cam_xclk;
-  -- end process proc_tb_xclkgen;
+  -- wait for clock to be stable and release DUT from RST
+  proc_tb_rst : process
+  begin
+    wait for 400 ns; -- after 20 clock cycles release the DUT out of reset
+    s_tb_sys_rst_n <= '1';
+  end process proc_tb_rst;
 
   -- release camera model out of reset shortly after the DUT
   proc_tb_cam_rst : process
@@ -63,15 +65,6 @@ begin
     s_tb_cam_rst_n <= '1';
   end process proc_tb_cam_rst;
 
-  -- wait for clock to be stable and release DUT from RST
-  proc_tb_rst : process
-  begin
-    wait for 400 ns; -- after 20 clock cycles release the DUT out of reset
-    s_tb_sys_rst_n <= '1';
-  end process proc_tb_rst;
-
-
-  -- TODO: will need some sort of model for the OV7670 camera
   --instantiate the camera model
   cam_model : entity work.ov7670_cam_model
   port map (
