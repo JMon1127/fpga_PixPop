@@ -27,9 +27,9 @@ use ieee.math_real.all;
 entity clocks_wrap is
   port (
     I_REF_CLK  : in std_logic;
-    O_SYS_CLK  : out std_logic;
-    O_CAM_XCLK : out std_logic;
-    O_LOCK     : out std_logic
+    O_SYS_CLK  : out std_logic; -- main system clock
+    O_CAM_XCLK : out std_logic; -- drives OV7670 camera
+    O_LOCK     : out std_logic  -- indicate PLL has locked
   );
   end clocks_wrap;
 
@@ -38,8 +38,8 @@ architecture rtl of clocks_wrap is
   component FCCC_C0 is
     port (
       CLK0 : in std_logic;
-      GL0  : out std_logic;
-      GL1  : out std_logic;
+      GL0  : out std_logic; -- 125MHz
+      GL1  : out std_logic; -- 24MHz
       LOCK : out std_logic
     );
   end component FCCC_C0;
@@ -54,5 +54,5 @@ begin
     LOCK => O_LOCK
   );
 
-
+  -- TODO: reset sync and let out once locked
 end architecture rtl;
