@@ -35,6 +35,9 @@ entity clocks_wrap is
 
 architecture rtl of clocks_wrap is
 
+  --------------------
+  -- Components
+  --------------------
   component FCCC_C0 is
     port (
       CLK0 : in std_logic;

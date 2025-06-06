@@ -42,6 +42,9 @@ entity cam_data_cdc_wrap is
 
 architecture rtl of cam_data_cdc_wrap is
 
+  --------------------
+  -- Components
+  --------------------
   component cam_data_cdc
     port (
       DATA     : in std_logic_vector(15 downto 0);
@@ -59,14 +62,16 @@ architecture rtl of cam_data_cdc_wrap is
     );
     end component cam_data_cdc;
 
+  --------------------
+  -- Signals
+  --------------------
   signal s_fifo_rd_en : std_logic;
-
-  -- TODO: remove
   signal s_fifo_empty : std_logic;
-  signal s_fifo_full : std_logic;
 
 begin
-  -- TODO: add logic to make the fifo streaming
+
+  -- Instantiate FIFO used to domain cross from pixel clock to system clock domain
+  -- FIFO is 16 wide by 16 deep
   u_cam_data_cdc_fifo : cam_data_cdc
   port map (
     DATA     => I_PIXEL_DATA,
@@ -74,15 +79,16 @@ begin
     RE       => s_fifo_rd_en,
     RRESET_N => I_SYS_RST_N,
     WCLOCK   => I_PIXEL_CLK,
-    WE       => I_PIXEL_VALID, -- write to the fifo whenever pixel is valid
+    WE       => I_PIXEL_VALID, -- writes to the fifo whenever pixel is valid
     WRESET_N => I_PIXEL_RST_N,
 
     DVLD     => O_PIXEL_VALID,
     EMPTY    => s_fifo_empty,
-    FULL     => s_fifo_full,
+    FULL     => open,          -- full flag unused
     Q        => O_PIXEL_DATA
   );
 
+  -- read from the fifo whenever it is not empty
   s_fifo_rd_en <= '1' when s_fifo_empty = '0' else '0';
 
 end architecture rtl;
