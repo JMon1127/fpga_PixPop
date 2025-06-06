@@ -4,20 +4,19 @@
 -------------------------------------------------------------------------------
 -- File        : clocks_wrap.vhd
 -- Author      : J. I. Montes
--- Company     : [Organization, if applicable]
 -- Created     : [2025-06-01]
--- Last Update : [YYYY-MM-DD]
--- Platform    : Microsemi Igloo2 TODO: add PN
+-- Last Update : [2025-06-01]
+-- Platform    : Microsemi Igloo2 M2GL010T-FG484
 -- Description : This block is a wrapper for clocks generated using CCC
 --
--- Dependencies: [List any external modules/packages if applicable]
+-- Dependencies: Microsemi Fabric Clock Conditioning Circuit(FCCC) IP component
 --
 -- Revision History:
 --   Date        Author        Description
 --   2025-06-01  J. I. Montes  Initial version
 -------------------------------------------------------------------------------
--- License/Disclaimer (if applicable)
--- This code is distributed under the terms of [license].
+-- License/Disclaimer
+-- This code may be adapted or shared as long as appropriate credit is given
 -------------------------------------------------------------------------------
 
 library ieee;

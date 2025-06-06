@@ -4,21 +4,21 @@
 -------------------------------------------------------------------------------
 -- File        : cam_data_rcvr.vhd
 -- Author      : J. I. Montes
--- Company     : [Organization, if applicable]
 -- Created     : [2025-05-12]
--- Last Update : [YYYY-MM-DD]
--- Platform    : Microsemi Igloo2 TODO: add PN
+-- Last Update : [2025-05-12]
+-- Platform    : Microsemi Igloo2 M2GL010T-FG484
 -- Description : This block receives parallel data from the OV7670 camera.
---               The parallel data is converted to AXI stream.
+--               2 byte pixels are formed and written to a FIFO which handles
+--               domain cross safely into the system domain.
 --
--- Dependencies: [List any external modules/packages if applicable]
+-- Dependencies: cam_data_cdc_wrap.vhd
 --
 -- Revision History:
 --   Date        Author        Description
 --   2025-05-12  J. I. Montes  Initial version
 -------------------------------------------------------------------------------
--- License/Disclaimer (if applicable)
--- This code is distributed under the terms of [license].
+-- License/Disclaimer
+-- This code may be adapted or shared as long as appropriate credit is given
 -------------------------------------------------------------------------------
 
 library ieee;

@@ -1,3 +1,25 @@
+###############################################################################
+## Title       : Make Libero Project
+## Project     : fpga_PixPop
+###############################################################################
+## File        : mk_proj.tcl
+## Author      : J. I. Montes
+## Created     : [2025-06-06]
+## Last Update : [2025-06-06]
+## Platform    : Microsemi Igloo2 M2GL010T-FG484
+## Description : This script generates a Libero project. It adds source files,
+##               IP cores, and simulation files and settings
+##
+## Dependencies: All design files
+##
+## Revision History:
+##   Date        Author        Description
+##   2025-06-06  J. I. Montes  Initial version
+###############################################################################
+## License/Disclaimer
+## This code may be adapted or shared as long as appropriate credit is given
+###############################################################################
+
 # This creates the libero project
 new_project -location {..\PixPop_fpga} \
             -name {PixPop_fpga} \
@@ -37,6 +59,10 @@ create_links \
             -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_rcvr.vhd} \
             -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_cdc_wrap.vhd}
 
+# Add all IP components here
+source cam_data_cdc.tcl
+source FCCC_C0.tcl
+
 # Add simulation files here. These are remote links
 create_links \
             -convert_EDN_to_HDL 0 \
@@ -67,8 +93,5 @@ organize_tool_files -tool {SIM_POSTLAYOUT} \
                     -file {../../simulation/tb_src/tb_top.vhd} \
                     -module {PixPop_top::work} \
                     -input_type {stimulus}
-
-source cam_data_cdc.tcl
-source FCCC_C0.tcl
 
 save_project

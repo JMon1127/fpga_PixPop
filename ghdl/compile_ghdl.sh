@@ -1,3 +1,24 @@
+###############################################################################
+## Title       : GHDL Compile/Simulate
+## Project     : fpga_PixPop
+###############################################################################
+## File        : compile_ghdl.sh
+## Author      : J. I. Montes
+## Created     : [2025-06-06]
+## Last Update : [2025-06-06]
+## Platform    : Microsemi Igloo2 M2GL010T-FG484
+## Description : This script compiles and simulates the PixPop FPGA using GHDL
+##
+## Dependencies: GHDL, GTKWave, All design files
+##
+## Revision History:
+##   Date        Author        Description
+##   2025-06-06  J. I. Montes  Initial version
+###############################################################################
+## License/Disclaimer
+## This code may be adapted or shared as long as appropriate credit is given
+###############################################################################
+
 #!/bin/bash
 
 # exit on error

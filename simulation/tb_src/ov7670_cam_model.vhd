@@ -4,20 +4,19 @@
 -------------------------------------------------------------------------------
 -- File        : ov7670_cam_model.vhd
 -- Author      : J. I. Montes
--- Company     : [Organization, if applicable]
 -- Created     : [2025-05-22]
--- Last Update : [YYYY-MM-DD]
--- Platform    : Microsemi Igloo2 TODO: add PN
+-- Last Update : [2025-05-22]
+-- Platform    : Microsemi Igloo2 M2GL010T-FG484
 -- Description : VHDL simulation model of the OV7670 camera
 --
--- Dependencies: [List any external modules/packages if applicable]
+-- Dependencies: None
 --
 -- Revision History:
 --   Date        Author        Description
 --   2025-05-22  J. I. Montes  Initial version
 -------------------------------------------------------------------------------
--- License/Disclaimer (if applicable)
--- This code is distributed under the terms of [license].
+-- License/Disclaimer
+-- This code may be adapted or shared as long as appropriate credit is given
 -------------------------------------------------------------------------------
 
 library ieee;

@@ -4,20 +4,21 @@
 -------------------------------------------------------------------------------
 -- File        : cam_data_cdc_wrap.vhd
 -- Author      : J. I. Montes
--- Company     : [Organization, if applicable]
 -- Created     : [2025-05-31]
--- Last Update : [YYYY-MM-DD]
--- Platform    : Microsemi Igloo2 TODO: add PN
--- Description : This block is wrapper for the Camera Data CDC FIFO
+-- Last Update : [2025-05-31]
+-- Platform    : Microsemi Igloo2 M2GL010T-FG484
+-- Description : This block is the wrapper for the Camera Data CDC FIFO.
+--               Handles camera data domain cross from the camera pixel clock
+--               domain to the system clock domain.
 --
--- Dependencies: [List any external modules/packages if applicable]
+-- Dependencies: Microsemi CoreFIFO IP component
 --
 -- Revision History:
 --   Date        Author        Description
 --   2025-05-31  J. I. Montes  Initial version
 -------------------------------------------------------------------------------
--- License/Disclaimer (if applicable)
--- This code is distributed under the terms of [license].
+-- License/Disclaimer
+-- This code may be adapted or shared as long as appropriate credit is given
 -------------------------------------------------------------------------------
 
 library ieee;

@@ -4,20 +4,20 @@
 -------------------------------------------------------------------------------
 -- File        : tb_top.vhd
 -- Author      : J. I. Montes
--- Company     : [Organization, if applicable]
--- Created     : [2025-05-11]
--- Last Update : [YYYY-MM-DD]
--- Platform    : Microsemi Igloo2 TODO: add PN
+-- Created     : [2025-05-21]
+-- Last Update : [2025-05-21]
+-- Platform    : Microsemi Igloo2 M2GL010T-FG484
 -- Description : Top level testbench for the PixPop FPGA
 --
--- Dependencies: [List any external modules/packages if applicable]
+-- Dependencies: PixPop_top.vhd
+--               ov7670_cam_model.vhd
 --
 -- Revision History:
 --   Date        Author        Description
 --   2025-05-21  J. I. Montes  Initial version
 -------------------------------------------------------------------------------
--- License/Disclaimer (if applicable)
--- This code is distributed under the terms of [license].
+-- License/Disclaimer
+-- This code may be adapted or shared as long as appropriate credit is given
 -------------------------------------------------------------------------------
 
 library ieee;
