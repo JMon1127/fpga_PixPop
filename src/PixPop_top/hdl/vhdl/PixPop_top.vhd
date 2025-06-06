@@ -30,16 +30,17 @@ entity PixPop_top is
     REF_CLK   : IN    STD_LOGIC;
     SYS_RST_N : IN    STD_LOGIC;
 
-    --will need ports for the camera interface
+    -- OV7670 Camera Interface
+    -- TODO: I2C camera configuration
     -- CAM_SCL   : OUT   STD_LOGIC; -- i2c clock for config
-    -- CAM_SDA   : INOUT STD_LOGIC; -- i2c ata bus for config
-    CAM_VSYNC : IN    STD_LOGIC; -- frame valid (active frame)
+    -- CAM_SDA   : INOUT STD_LOGIC; -- i2c data bus for config
+    CAM_VSYNC : IN    STD_LOGIC; -- Start of Frame (active frame)
     CAM_HREF  : IN    STD_LOGIC; -- line data valid (active pixels)
     CAM_PCLK  : IN    STD_LOGIC; -- camera pixel clock
     CAM_XCLK  : OUT   STD_LOGIC; -- camera input clock
     CAM_DATA  : IN    STD_LOGIC_VECTOR(7 downto 0) -- 8 bit color data
 
-    --eventually need to also transmit somehow
+    -- TODO: eventually need to also transmit somehow
 
     -- since we arent having a soft core proc yet i think minimal control will be with switches on board
     -- eventually can look into adding a proc... or could also connect one externally
@@ -50,24 +51,27 @@ architecture rtl of PixPop_top is
   --------------------
   -- Signals
   --------------------
-  signal s_sys_clk       : std_logic;
-  signal s_clk_lock      : std_logic;
-  signal s_safe_rst_n    : std_logic;
+  signal s_sys_clk       : std_logic; -- main system clock
+  signal s_clk_lock      : std_logic; -- indicates PLL has locked
+  signal s_safe_rst_n    : std_logic; -- indicates safe to let out of reset
 
-  signal s_cam_src_data  : std_logic_vector(15 downto 0);
-  signal s_cam_src_valid : std_logic;
+  signal s_cam_src_data  : std_logic_vector(15 downto 0); -- 2 byte RGB data
+  signal s_cam_src_valid : std_logic;                     -- indicate data is valid
 
 begin
-  -- TODO: will have a smart design here
-  -- this should drive the camera xclk
+
+  -- Clock Management
   u_clk_mgr : entity work.clocks_wrap
   port map (
     I_REF_CLK  => REF_CLK,
     O_SYS_CLK  => s_sys_clk,
-    O_CAM_XCLK => CAM_XCLK,
+    O_CAM_XCLK => CAM_XCLK, -- drives OV7670 camera at 24MHz
     O_LOCK     => s_clk_lock
   );
 
+  -- TODO: fix this. Actually seems dumb to have this logic at the top level
+  --       instead look into using microsemi ip to handle safe resets for the sys domain and pclk domain
+  --       Seems like the ip is called CoreRESETP. Tie this into the clock wrapper
   -- only let out of reset once PLL is locked
   proc_rst_lock : process (REF_CLK)
   begin
@@ -78,14 +82,11 @@ begin
     end if;
   end process;
 
-  -- TODO: need data receiver block
-  -- this should receive the camera sync/ref, pclk and data
-  -- also this will probably be a good spot to convert the parallel data to stream
-  -- Instantiate the data receiver block
+  -- OV7670 Camera Data Receiver
   u_cam_rcvr : entity work.cam_data_rcvr
   port map (
-    SYS_CLK     => s_sys_clk, -- TODO: make this a faster clock than the 50MHz
-    SYS_RST_N   => s_safe_rst_n, -- TODO: may need ot get a reset that is synced to the PCLK domain
+    SYS_CLK     => s_sys_clk,
+    SYS_RST_N   => s_safe_rst_n,
 
     I_CAM_DATA  => CAM_DATA,
     I_CAM_PCLK  => CAM_PCLK,
@@ -95,10 +96,11 @@ begin
     O_PIX_DATA  => s_cam_src_data,
     O_PIX_VALID => s_cam_src_valid
   );
-  -- Will need a data proc block
+
+  -- TODO: Will need a data proc block
   -- here it will probably be a top level that selects between edge detect algo, normal color, or even grayscale
 
-  -- will need a data transmit block
+  -- TODO: will need a data transmit block
   -- this should take the strem from data proc block and perform the transmit logic
 
 end architecture rtl;
