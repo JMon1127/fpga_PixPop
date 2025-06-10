@@ -30,6 +30,7 @@ entity cam_data_rcvr is
   port (
     SYS_CLK     : in std_logic;
     SYS_RST_N   : in std_logic;
+    PCLK_RST_N  : in std_logic;
 
     I_CAM_DATA  : in std_logic_vector(7 downto 0);
     I_CAM_PCLK  : in std_logic;
@@ -62,11 +63,6 @@ architecture rtl of cam_data_rcvr is
   --------------------
   signal s_cam_data_rcvr       : sm_cam_rcvr := tIdleVsync;
 
-  --TODO: handles reset sync to pix clock domain, may remove once ip is added in the clock wrapper
-  signal s_sys_rst_n_dly       : std_logic;
-  signal s_rst_n_sync1         : std_logic;
-  signal s_rst_n_slow          : std_logic;
-
   signal s_cam_vsync_prev      : std_logic; -- used for rising edge detect of vsync
   signal s_cam_href_prev       : std_logic; -- used for rising edge detect of href
 
@@ -79,26 +75,10 @@ architecture rtl of cam_data_rcvr is
 
 begin
 
-  --TODO: remove once reset sync ip is added
-  proc_rst_dly : process (SYS_CLK)
-  begin
-    if(rising_edge(SYS_CLK)) then
-      s_sys_rst_n_dly <= SYS_RST_N;
-    end if;
-  end process;
-
-  proc_rst_sync : process (I_CAM_PCLK)
-  begin
-    if(rising_edge(I_CAM_PCLK)) then
-      s_rst_n_sync1 <= s_sys_rst_n_dly;
-      s_rst_n_slow  <= s_rst_n_sync1;
-    end if;
-  end process;
-
   -- State machine to capture data
-  proc_cam_data_rcvr : process (s_rst_n_slow, I_CAM_PCLK)
+  proc_cam_data_rcvr : process (PCLK_RST_N, I_CAM_PCLK)
   begin
-    if(s_rst_n_slow = '0') then
+    if(PCLK_RST_N = '0') then
       s_cam_data_rcvr <= tIdleVsync;
       s_pix_data      <= (others => '0');
       s_pix_msb       <= (others => '0');
@@ -165,7 +145,7 @@ begin
     I_PIXEL_DATA  => s_pix_data,
     I_PIXEL_VALID => s_pix_valid,
     I_PIXEL_CLK   => I_CAM_PCLK,
-    I_PIXEL_RST_N => s_rst_n_slow,
+    I_PIXEL_RST_N => PCLK_RST_N,
     I_SYS_CLK     => SYS_CLK,
     I_SYS_RST_N   => SYS_RST_N,
 

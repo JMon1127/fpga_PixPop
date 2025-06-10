@@ -55,7 +55,7 @@ new_project -location {..\PixPop_fpga} \
 create_links \
             -convert_EDN_to_HDL 0 \
             -hdl_source {../../src/PixPop_top/hdl/vhdl/PixPop_top.vhd} \
-            -hdl_source {../../src/PixPop_top/hdl/vhdl/clocks_wrap.vhd} \
+            -hdl_source {../../src/PixPop_top/hdl/vhdl/clock_rst_wrap.vhd} \
             -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_rcvr.vhd} \
             -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_cdc_wrap.vhd}
 

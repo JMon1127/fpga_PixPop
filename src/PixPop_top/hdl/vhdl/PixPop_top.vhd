@@ -9,7 +9,7 @@
 -- Platform    : Microsemi Igloo2 M2GL010T-FG484
 -- Description : Top level code for the PixPop FPGA
 --
--- Dependencies: clocks_wrap.vhd
+-- Dependencies: clock_rst_wrap.vhd
 --               cam_data_rcvr.vhd
 --
 -- Revision History:
@@ -28,7 +28,7 @@ use ieee.math_real.all;
 entity PixPop_top is
   port(
     REF_CLK   : IN    STD_LOGIC;
-    SYS_RST_N : IN    STD_LOGIC;
+    EXT_RST_N : IN    STD_LOGIC;
 
     -- OV7670 Camera Interface
     -- TODO: I2C camera configuration
@@ -51,42 +51,33 @@ architecture rtl of PixPop_top is
   --------------------
   -- Signals
   --------------------
-  signal s_sys_clk       : std_logic; -- main system clock
-  signal s_clk_lock      : std_logic; -- indicates PLL has locked
-  signal s_safe_rst_n    : std_logic; -- indicates safe to let out of reset
+  signal s_sys_clk            : std_logic; -- main system clock
+  signal s_rst_n_syncd_pclk   : std_logic;
+  signal s_rst_n_syncd_sysclk : std_logic;
 
-  signal s_cam_src_data  : std_logic_vector(15 downto 0); -- 2 byte RGB data
-  signal s_cam_src_valid : std_logic;                     -- indicate data is valid
+  signal s_cam_src_data       : std_logic_vector(15 downto 0); -- 2 byte RGB data
+  signal s_cam_src_valid      : std_logic;                     -- indicate data is valid
 
 begin
 
   -- Clock Management
-  u_clk_mgr : entity work.clocks_wrap
+  u_clk_mgr : entity work.clock_rst_wrap
   port map (
-    I_REF_CLK  => REF_CLK,
-    O_SYS_CLK  => s_sys_clk,
-    O_CAM_XCLK => CAM_XCLK, -- drives OV7670 camera at 24MHz
-    O_LOCK     => s_clk_lock
+    I_REF_CLK            => REF_CLK,
+    I_EXT_RST_N          => EXT_RST_N,
+    I_CAM_PCLK           => CAM_PCLK,
+    O_RST_N_SYNCD_PCLK   => s_rst_n_syncd_pclk,
+    O_RST_N_SYNCD_SYSCLK => s_rst_n_syncd_sysclk,
+    O_SYS_CLK            => s_sys_clk,
+    O_CAM_XCLK           => CAM_XCLK -- drives OV7670 camera at 24MHz
   );
-
-  -- TODO: fix this. Actually seems dumb to have this logic at the top level
-  --       instead look into using microsemi ip to handle safe resets for the sys domain and pclk domain
-  --       Seems like the ip is called CoreRESETP. Tie this into the clock wrapper
-  -- only let out of reset once PLL is locked
-  proc_rst_lock : process (REF_CLK)
-  begin
-    if(SYS_RST_N = '1' and s_clk_lock = '1') then
-      s_safe_rst_n <= '1';
-    else
-      s_safe_rst_n <= '0';
-    end if;
-  end process;
 
   -- OV7670 Camera Data Receiver
   u_cam_rcvr : entity work.cam_data_rcvr
   port map (
     SYS_CLK     => s_sys_clk,
-    SYS_RST_N   => s_safe_rst_n,
+    SYS_RST_N   => s_rst_n_syncd_sysclk,
+    PCLK_RST_N  => s_rst_n_syncd_pclk,
 
     I_CAM_DATA  => CAM_DATA,
     I_CAM_PCLK  => CAM_PCLK,
