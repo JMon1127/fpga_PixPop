@@ -61,7 +61,7 @@ begin
   -- release camera model out of reset shortly after the DUT
   proc_tb_cam_rst : process
   begin
-    wait for 450 ns;
+    wait for 6000 ns;
     s_tb_cam_rst_n <= '1';
   end process proc_tb_cam_rst;
 
@@ -81,7 +81,7 @@ begin
   dut : entity work.PixPop_top
   port map (
     REF_CLK   => s_tb_sys_clk,
-    SYS_RST_N => s_tb_sys_rst_n,
+    EXT_RST_N => s_tb_sys_rst_n,
 
     CAM_DATA  => s_tb_cam_data,
     CAM_PCLK  => s_tb_cam_pclk,
