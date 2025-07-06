@@ -110,21 +110,20 @@ begin
             s_cam_data_rcvr <= tDataCapture;
           end if;
         when tDataCapture =>
-          s_cam_href_prev <= I_CAM_HREF;
-
           -- check if msB should be captured or form full pixel word data
           if(s_pix_cap_msb = '1') then
             s_pix_msb     <= I_CAM_DATA;
             s_pix_cap_msb <= '0';
           else
-            if(s_cam_href_prev = '1') then
+            if(I_CAM_HREF = '1') then
               s_pix_data  <= s_pix_msb & I_CAM_DATA;
               s_pix_valid <= '1';
               s_col_cntr  <= s_col_cntr + 1;
             end if;
 
-            if(s_row_cntr = c_row) then
+            if(s_row_cntr = (c_row-1) and (s_col_cntr = c_col)) then
               s_row_cntr <= 0;
+              s_col_cntr <= 0;
               s_cam_data_rcvr <= tIdleVsync;
             elsif(s_col_cntr = c_col) then
               s_row_cntr <= s_row_cntr + 1;

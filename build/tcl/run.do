@@ -4,7 +4,7 @@ quietly set PROJECT_DIR "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpga_PixPop/buil
 if {[file exists presynth/_info]} {
    echo "INFO: Simulation library presynth already exists"
 } else {
-   file delete -force presynth 
+   file delete -force presynth
    vlib presynth
 }
 vmap presynth presynth
@@ -30,8 +30,11 @@ vcom -2008 -explicit  -work presynth "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpg
 vcom -2008 -explicit  -work presynth "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpga_PixPop/simulation/tb_src/ov7670_cam_model.vhd"
 vcom -2008 -explicit  -work presynth "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpga_PixPop/simulation/tb_src/tb_top.vhd"
 
-vsim -L IGLOO2 -L presynth  -t 100ps presynth.tb_top
+vsim -L IGLOO2 -L presynth  -t 1ps presynth.tb_top
 add wave -group tb_top      /tb_top/*
+add wave -group cam_model   /tb_top/cam_model/*
+add wave -group dut         /tb_top/dut/*
+add wave -group clock_rst   /tb_top/dut/u_clk_mgr/*
 add wave -group cam_receive /tb_top/dut/u_cam_rcvr/*
 add wave -group cdc_wrap    /tb_top/dut/u_cam_rcvr/u_cam_data_cdc/*
 add wave -group cdc_fifo    /tb_top/dut/u_cam_rcvr/u_cam_data_cdc/u_cam_data_cdc_fifo/*

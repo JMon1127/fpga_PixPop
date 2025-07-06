@@ -44,7 +44,7 @@ architecture behavorial of tb_top is
 
 begin
 
-  -- generate a 50MHz clock to drive the sys clk input to the DUT
+  -- generate a 50MHz clock to drive the ref clk input to the DUT
   proc_tb_clkgen : process
   begin
     wait for 10 ns;
