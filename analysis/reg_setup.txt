@@ -1,0 +1,6 @@
+address | reg name | desired value | notes
+--------------------------------------------------------------
+    x12 |     COM7 |           x04 | sets output format to RGB
+    x40 |    COM15 |           xD0 | sets to RGB 565
+
+TODO: determine settings for test pattern
