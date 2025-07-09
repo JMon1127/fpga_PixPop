@@ -4,3 +4,6 @@ https://github.com/oneapi-src/oneAPI-samples/tree/release/2024.1/DirectProgrammi
 talks about edge detection in rgb :
 https://soumyadutta-cse.github.io/papers/edge_detection_rgb_space_artcom2009.pdf
 
+rgb to gs conversion
+https://www.hackster.io/yeshvanth_muniraj/rgb-to-grayscale-with-hw-on-zynq-979dd4
+https://vhdlguru.blogspot.com/2020/12/image-processsing-rgb-to-gray-scale.html
