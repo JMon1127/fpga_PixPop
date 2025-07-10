@@ -41,16 +41,19 @@ architecture rtl of rgb2gs is
   --------------------
   -- Signals
   --------------------
-  signal s_red8       : std_logic_vector(7 downto 0); -- scaled 5 bit red to 8 bits
-  signal s_green8     : std_logic_vector(7 downto 0); -- scaled 6 bit green to 8 bits
-  signal s_blue8      : std_logic_vector(7 downto 0); -- scaled 5 bit blue to 8 bits
-  signal s_red5       : std_logic_vector(4 downto 0); -- og 5 bit red from 16 bit input
-  signal s_green6     : std_logic_vector(5 downto 0); -- og 6 bit green from 16 bit input
-  signal s_blue5      : std_logic_vector(4 downto 0); -- og 5 bit blue from 16 bit input
-  signal s_red_temp   : unsigned(15 downto 0);
-  signal s_green_temp : unsigned(15 downto 0);
-  signal s_blue_temp  : unsigned(15 downto 0);
-  signal s_gs_temp    : unsigned(15 downto 0);
+  signal s_red8          : std_logic_vector(7 downto 0); -- scaled 5 bit red to 8 bits
+  signal s_green8        : std_logic_vector(7 downto 0); -- scaled 6 bit green to 8 bits
+  signal s_blue8         : std_logic_vector(7 downto 0); -- scaled 5 bit blue to 8 bits
+  signal s_red5          : std_logic_vector(4 downto 0); -- og 5 bit red from 16 bit input
+  signal s_green6        : std_logic_vector(5 downto 0); -- og 6 bit green from 16 bit input
+  signal s_blue5         : std_logic_vector(4 downto 0); -- og 5 bit blue from 16 bit input
+  -- signal s_red_temp      : unsigned(15 downto 0);
+  -- signal s_green_temp    : unsigned(15 downto 0);
+  -- signal s_blue_temp     : unsigned(15 downto 0);
+  signal s_split_valid   : std_logic;
+  signal s_scale_valid   : std_logic;
+  signal s_gs_temp_valid : std_logic;
+  signal s_gs_temp       : unsigned(15 downto 0);
 
 begin
 
@@ -62,9 +65,10 @@ begin
   process (SYS_CLK, SYS_RST_N)
   begin
     if(SYS_RST_N = '0') then
-      s_red5   <= (others => '0');
-      s_green6 <= (others => '0');
-      s_blue5  <= (others => '0');
+      s_red5        <= (others => '0');
+      s_green6      <= (others => '0');
+      s_blue5       <= (others => '0');
+      s_split_valid <= '0';
     elsif(rising_edge(SYS_CLK)) then
       -- ensure input data is valid
       if(I_RGB_DATA_VALID = '1') then
@@ -81,9 +85,10 @@ begin
   process (SYS_CLK, SYS_RST_N)
   begin
     if(SYS_RST_N = '0') then
-      s_red8   <= (others => '0');
-      s_green8 <= (others => '0');
-      s_blue8  <= (others => '0');
+      s_red8        <= (others => '0');
+      s_green8      <= (others => '0');
+      s_blue8       <= (others => '0');
+      s_scale_valid <= '0';
     elsif(rising_edge(SYS_CLK)) then
       if(s_split_valid = '1') then
         s_red8   <= s_red5 & s_red5(4 downto 2);
@@ -103,7 +108,8 @@ begin
       -- s_red_temp   <= (others => '0');
       -- s_green_temp <= (others => '0');
       -- s_blue_temp  <= (others => '0');
-      s_gs_temp  <= (others => '0');
+      s_gs_temp       <= (others => '0');
+      s_gs_temp_valid <= '0';
     elsif(rising_edge(SYS_CLK)) then
       if(s_scale_valid = '1') then
         -- s_red_temp   <= unsigned(s_red8)   * 38;
@@ -118,7 +124,8 @@ begin
   end process;
 
   -- right shift 7 times is the same as divide by 128
-
+  O_GS_DATA       <= std_logic_vector(s_gs_temp(14 downto 7));
+  O_GS_DATA_VALID <= s_gs_temp_valid;
 
 
 end architecture rtl;
