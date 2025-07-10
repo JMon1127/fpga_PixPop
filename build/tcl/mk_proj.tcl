@@ -57,7 +57,8 @@ create_links \
             -hdl_source {../../src/PixPop_top/hdl/vhdl/PixPop_top.vhd} \
             -hdl_source {../../src/PixPop_top/hdl/vhdl/clock_rst_wrap.vhd} \
             -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_rcvr.vhd} \
-            -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_cdc_wrap.vhd}
+            -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_cdc_wrap.vhd} \
+            -hdl_source {../../src/rgb2gs/hdl/vhdl/rgb2gs.vhd} \
 
 # Add all IP components here
 source cam_data_cdc.tcl
