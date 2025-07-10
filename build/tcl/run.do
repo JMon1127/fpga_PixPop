@@ -36,6 +36,7 @@ add wave -group cam_model   /tb_top/cam_model/*
 add wave -group dut         /tb_top/dut/*
 add wave -group clock_rst   /tb_top/dut/u_clk_mgr/*
 add wave -group cam_receive /tb_top/dut/u_cam_rcvr/*
+add wave -group rgb2gs      /tb_top/dut/u_rgb2gs_conv/*
 add wave -group cdc_wrap    /tb_top/dut/u_cam_rcvr/u_cam_data_cdc/*
 add wave -group cdc_fifo    /tb_top/dut/u_cam_rcvr/u_cam_data_cdc/u_cam_data_cdc_fifo/*
 run 100ms
