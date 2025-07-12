@@ -51,12 +51,15 @@ architecture rtl of PixPop_top is
   --------------------
   -- Signals
   --------------------
-  signal s_sys_clk            : std_logic; -- main system clock
+  signal s_sys_clk            : std_logic;                     -- main system clock
   signal s_rst_n_syncd_pclk   : std_logic;
   signal s_rst_n_syncd_sysclk : std_logic;
 
   signal s_cam_src_data       : std_logic_vector(15 downto 0); -- 2 byte RGB data
   signal s_cam_src_valid      : std_logic;                     -- indicate data is valid
+
+  signal s_cam_gs_data        : std_logic_vector(7 downto 0);  -- 8 bit grayscale data converted from RGB
+  signal s_cam_gs_valid       : std_logic;                     -- indicates grayscale data is valid
 
 begin
 
@@ -90,7 +93,18 @@ begin
 
   -- TODO: Will need a data proc block
   -- here it will probably be a top level that selects between edge detect algo, normal color, or even grayscale
+  -- TODO: eventually this rgb2gs module should move down a level into data proc block
+  u_rgb2gs_conv : entity work.rgb2gs
+  port map (
+    SYS_CLK          => s_sys_clk,
+    SYS_RST_N        => s_rst_n_syncd_sysclk,
 
+    I_RGB_DATA       => s_cam_src_data,
+    I_RGB_DATA_VALID => s_cam_src_valid,
+
+    O_GS_DATA        => s_cam_gs_data,
+    O_GS_DATA_VALID  => s_cam_gs_valid
+  );
   -- TODO: will need a data transmit block
   -- this should take the strem from data proc block and perform the transmit logic
 

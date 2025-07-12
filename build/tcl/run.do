@@ -21,6 +21,7 @@ vlog -sv -work presynth "${PROJECT_DIR}/component/work/cam_data_cdc/cam_data_cdc
 vlog -sv -work presynth "${PROJECT_DIR}/component/work/cam_data_cdc/cam_data_cdc_0/rtl/vlog/core/cam_data_cdc_cam_data_cdc_0_ram_wrapper.v"
 vlog -sv -work presynth "${PROJECT_DIR}/component/work/cam_data_cdc/cam_data_cdc_0/rtl/vlog/core/COREFIFO.v"
 vlog -sv -work presynth "${PROJECT_DIR}/component/work/cam_data_cdc/cam_data_cdc.v"
+vcom -2008 -explicit  -work presynth "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpga_PixPop/src/rgb2gs/hdl/vhdl/rgb2gs.vhd"
 vcom -2008 -explicit  -work presynth "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpga_PixPop/src/cam_data_rcvr/hdl/vhdl/cam_data_cdc_wrap.vhd"
 vcom -2008 -explicit  -work presynth "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpga_PixPop/src/cam_data_rcvr/hdl/vhdl/cam_data_rcvr.vhd"
 vcom -2008 -explicit  -work presynth "${PROJECT_DIR}/component/work/FCCC_C0/FCCC_C0_0/FCCC_C0_FCCC_C0_0_FCCC.vhd"
@@ -36,6 +37,7 @@ add wave -group cam_model   /tb_top/cam_model/*
 add wave -group dut         /tb_top/dut/*
 add wave -group clock_rst   /tb_top/dut/u_clk_mgr/*
 add wave -group cam_receive /tb_top/dut/u_cam_rcvr/*
+add wave -group rgb2gs      /tb_top/dut/u_rgb2gs_conv/*
 add wave -group cdc_wrap    /tb_top/dut/u_cam_rcvr/u_cam_data_cdc/*
 add wave -group cdc_fifo    /tb_top/dut/u_cam_rcvr/u_cam_data_cdc/u_cam_data_cdc_fifo/*
 run 100ms
