@@ -21,6 +21,7 @@ vlog -sv -work presynth "${PROJECT_DIR}/component/work/cam_data_cdc/cam_data_cdc
 vlog -sv -work presynth "${PROJECT_DIR}/component/work/cam_data_cdc/cam_data_cdc_0/rtl/vlog/core/cam_data_cdc_cam_data_cdc_0_ram_wrapper.v"
 vlog -sv -work presynth "${PROJECT_DIR}/component/work/cam_data_cdc/cam_data_cdc_0/rtl/vlog/core/COREFIFO.v"
 vlog -sv -work presynth "${PROJECT_DIR}/component/work/cam_data_cdc/cam_data_cdc.v"
+vcom -2008 -explicit  -work presynth "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpga_PixPop/src/rgb2gs/hdl/vhdl/rgb2gs.vhd"
 vcom -2008 -explicit  -work presynth "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpga_PixPop/src/cam_data_rcvr/hdl/vhdl/cam_data_cdc_wrap.vhd"
 vcom -2008 -explicit  -work presynth "C:/Users/JMon1/FPGA_dev/PixPop/develop/fpga_PixPop/src/cam_data_rcvr/hdl/vhdl/cam_data_rcvr.vhd"
 vcom -2008 -explicit  -work presynth "${PROJECT_DIR}/component/work/FCCC_C0/FCCC_C0_0/FCCC_C0_FCCC_C0_0_FCCC.vhd"

@@ -47,19 +47,12 @@ architecture rtl of rgb2gs is
   signal s_red5          : std_logic_vector(4 downto 0); -- og 5 bit red from 16 bit input
   signal s_green6        : std_logic_vector(5 downto 0); -- og 6 bit green from 16 bit input
   signal s_blue5         : std_logic_vector(4 downto 0); -- og 5 bit blue from 16 bit input
-  -- signal s_red_temp      : unsigned(15 downto 0);
-  -- signal s_green_temp    : unsigned(15 downto 0);
-  -- signal s_blue_temp     : unsigned(15 downto 0);
-  signal s_split_valid   : std_logic;
-  signal s_scale_valid   : std_logic;
-  signal s_gs_temp_valid : std_logic;
-  signal s_gs_temp       : unsigned(15 downto 0);
+  signal s_split_valid   : std_logic;                    -- indicates the split RGB data is valid
+  signal s_scale_valid   : std_logic;                    -- indicates the scaled data is valid
+  signal s_gs_temp_valid : std_logic;                    -- indicates the gs data before shifting is valid
+  signal s_gs_temp       : unsigned(15 downto 0);        -- grayscale data prior to shifting
 
 begin
-
-  -- scale using bit replication
-  -- example 21 (10101) would be 173 (10101 101)
-  -- so r8 = r5 & r5(4 downto 2)
 
   -- start with splitting the RGB components
   process (SYS_CLK, SYS_RST_N)
@@ -105,18 +98,13 @@ begin
   process (SYS_CLK, SYS_RST_N)
   begin
     if(SYS_RST_N = '0') then
-      -- s_red_temp   <= (others => '0');
-      -- s_green_temp <= (others => '0');
-      -- s_blue_temp  <= (others => '0');
       s_gs_temp       <= (others => '0');
       s_gs_temp_valid <= '0';
     elsif(rising_edge(SYS_CLK)) then
       if(s_scale_valid = '1') then
-        -- s_red_temp   <= unsigned(s_red8)   * 38;
-        -- s_green_temp <= unsigned(s_green8) * 76;
-        -- s_blue_temp  <= unsigned(s_blue8)  * 14;
-        --TODO: see if you have to 0 pad. from previous experience its best practice to
-        s_gs_temp <= (unsigned(s_red8) * 38) + (unsigned(s_green8) * 76) + (unsigned(s_blue8) * 14);
+        s_gs_temp <=  (unsigned(s_red8) * 38)
+                    + (unsigned(s_green8) * 76)
+                    + (unsigned(s_blue8) * 14);
       end if;
 
       s_gs_temp_valid <= s_scale_valid;

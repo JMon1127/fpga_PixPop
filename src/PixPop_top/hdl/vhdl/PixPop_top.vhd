@@ -51,15 +51,15 @@ architecture rtl of PixPop_top is
   --------------------
   -- Signals
   --------------------
-  signal s_sys_clk            : std_logic; -- main system clock
+  signal s_sys_clk            : std_logic;                     -- main system clock
   signal s_rst_n_syncd_pclk   : std_logic;
   signal s_rst_n_syncd_sysclk : std_logic;
 
   signal s_cam_src_data       : std_logic_vector(15 downto 0); -- 2 byte RGB data
   signal s_cam_src_valid      : std_logic;                     -- indicate data is valid
 
-  signal s_cam_gs_data        : std_logic_vector(7 downto 0); -- 8 bit grayscale data converted from RGB
-  signal s_cam_gs_valid       : std_logic;
+  signal s_cam_gs_data        : std_logic_vector(7 downto 0);  -- 8 bit grayscale data converted from RGB
+  signal s_cam_gs_valid       : std_logic;                     -- indicates grayscale data is valid
 
 begin
 
