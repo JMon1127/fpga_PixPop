@@ -22,59 +22,59 @@ set_io {EXT_RST_N}       \
 set_io {CAM_VSYNC}       \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname AB15
 
 set_io {CAM_HREF}        \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname AA15
 
 set_io {CAM_PCLK}        \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname AB18
 
 set_io {CAM_XCLK}        \
   -iostd LVCMOS33        \
   -direction Output      \
-  -pinname
+  -pinname AB19
 
 set_io {CAM_DATA(7)}     \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname Y18
 
 set_io {CAM_DATA(6)}     \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname Y19
 
 set_io {CAM_DATA(5)}     \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname W16
 
 set_io {CAM_DATA(4)}     \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname V16
 
 set_io {CAM_DATA(3)}     \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname C22
 
 set_io {CAM_DATA(2)}     \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname B22
 
 set_io {CAM_DATA(1)}     \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname Y15
 
 set_io {CAM_DATA(0)}     \
   -iostd LVCMOS33        \
   -direction Input       \
-  -pinname
+  -pinname W15
