@@ -11,46 +11,70 @@
 
 set_io {REF_CLK}         \
   -iostd LVCMOS25        \
-	-direction Input       \
+  -direction Input       \
   -pinname K1
 
 set_io {EXT_RST_N}       \
-	-iostd LVCMOS33        \
-	-direction Input       \
-	-pinname K18
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname K18
 
-set_io {CAM_VSYNC}         \
-	-direction Input
+set_io {CAM_VSYNC}       \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_HREF}          \
-	-direction Input
+set_io {CAM_HREF}        \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_PCLK}          \
-	-direction Input
+set_io {CAM_PCLK}        \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_XCLK}          \
-	-direction Output
+set_io {CAM_XCLK}        \
+  -iostd LVCMOS33        \
+  -direction Output      \
+  -pinname
 
-set_io {CAM_DATA(7)}       \
-	-direction Input
+set_io {CAM_DATA(7)}     \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_DATA(6)}       \
-	-direction Input
+set_io {CAM_DATA(6)}     \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_DATA(5)}       \
-	-direction Input
+set_io {CAM_DATA(5)}     \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_DATA(4)}       \
-	-direction Input
+set_io {CAM_DATA(4)}     \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_DATA(3)}       \
-	-direction Input
+set_io {CAM_DATA(3)}     \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_DATA(2)}       \
-	-direction Input
+set_io {CAM_DATA(2)}     \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_DATA(1)}       \
-	-direction Input
+set_io {CAM_DATA(1)}     \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
 
-set_io {CAM_DATA(0)}       \
-	-direction Input
+set_io {CAM_DATA(0)}     \
+  -iostd LVCMOS33        \
+  -direction Input       \
+  -pinname
