@@ -57,7 +57,8 @@ create_links \
             -hdl_source {../../src/PixPop_top/hdl/vhdl/PixPop_top.vhd} \
             -hdl_source {../../src/PixPop_top/hdl/vhdl/clock_rst_wrap.vhd} \
             -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_rcvr.vhd} \
-            -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_cdc_wrap.vhd}
+            -hdl_source {../../src/cam_data_rcvr/hdl/vhdl/cam_data_cdc_wrap.vhd} \
+            -hdl_source {../../src/rgb2gs/hdl/vhdl/rgb2gs.vhd}
 
 # Add all IP components here
 source cam_data_cdc.tcl
@@ -68,6 +69,12 @@ create_links \
             -convert_EDN_to_HDL 0 \
             -stimulus {../../simulation/tb_src/ov7670_cam_model.vhd} \
             -stimulus {../../simulation/tb_src/tb_top.vhd}
+
+
+# Add constraints
+create_links \
+            -convert_EDN_to_HDL 0 \
+            -io_pdc {../constraints/pdc/pixpop_pinout.pdc}
 
 # this builds the hierarchy
 build_design_hierarchy
