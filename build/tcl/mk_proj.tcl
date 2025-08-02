@@ -70,6 +70,12 @@ create_links \
             -stimulus {../../simulation/tb_src/ov7670_cam_model.vhd} \
             -stimulus {../../simulation/tb_src/tb_top.vhd}
 
+
+# Add constraints
+create_links \
+            -convert_EDN_to_HDL 0 \
+            -io_pdc {../constraints/pdc/pixpop_pinout.pdc}
+
 # this builds the hierarchy
 build_design_hierarchy
 
