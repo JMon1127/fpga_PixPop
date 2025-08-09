@@ -25,16 +25,16 @@ use ieee.numeric_std.all;
 use ieee.math_real.all;
 
 entity rgb2gs is
-    port (
-        SYS_CLK          : in std_logic;
-        SYS_RST_N        : in std_logic;
+  port (
+    SYS_CLK          : in std_logic;
+    SYS_RST_N        : in std_logic;
 
-        I_RGB_DATA       : in std_logic_vector(15 downto 0);
-        I_RGB_DATA_VALID : in std_logic;
+    I_RGB_DATA       : in std_logic_vector(15 downto 0);
+    I_RGB_DATA_VALID : in std_logic;
 
-        O_GS_DATA        : out std_logic_vector(7 downto 0);
-        O_GS_DATA_VALID  : out std_logic
-    );
+    O_GS_DATA        : out std_logic_vector(7 downto 0);
+    O_GS_DATA_VALID  : out std_logic
+  );
 end rgb2gs;
 
 architecture rtl of rgb2gs is
