@@ -26,17 +26,17 @@ use ieee.math_real.all;
 
 entity line_buf is
   generic (
-    pixel_size   : integer := 8;
-    img_row_size : integer := 640
+    pixel_size    : integer := 8;
+    img_row_size  : integer := 640;
+    address_width : integer := 16
   );
   port (
     SYS_CLK          : in std_logic;
-    SYS_RST_N        : in std_logic;
 
     I_WR_DATA        : in std_logic_vector(pixel_size-1 downto 0);
     I_WR_EN          : in std_logic;
-    I_WR_ADDR        : in std_logic;
-    I_RD_ADDR        : in std_logic;
+    I_WR_ADDR        : in std_logic_vector((address_width - 1) downto 0);
+    I_RD_ADDR        : in std_logic_vector((address_width - 1) downto 0);
 
     O_RD_DATA        : out std_logic_vector(pixel_size-1 downto 0)
   );
@@ -52,18 +52,23 @@ architecture rtl of line_buf is
   -- Signals
   --------------------
   signal s_line_buffer : t_line_buffer;
+  signal s_rd_addr_reg : std_logic_vector((address_width - 1) downto 0);
 
 begin
 
   -- write operation
-  process (SYS_CLK, SYS_RST_N)
+  process (SYS_CLK)
   begin
-    if(SYS_RST_N = '0') then
-
-    elsif(rising_edge(SYS_CLK)) then
+    if(rising_edge(SYS_CLK)) then
+      s_rd_addr_reg <= I_RD_ADDR;
       -- check for write enable
       if(I_WR_EN = '1') then
-        s_line_buffer(I_WR_ADDR)
+        s_line_buffer(to_integer(unsigned(I_WR_ADDR))) <= I_WR_DATA;
+      end if;
     end if;
   end process;
+
+  -- read operation
+  O_RD_DATA <= s_line_buffer(to_integer(unsigned(s_rd_addr_reg)));
+
 end architecture rtl;
