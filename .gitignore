@@ -1,6 +1,6 @@
 ghdl/*ghw
 ghdl/*cf
-./src/*/sim/__pycach__/
-./src/*/sim/sim_build/
-./src/*/sim/*xml
-sim/*vcd
+src/*/sim/__pycache__/*
+src/*/sim/sim_build/
+src/*/sim/*xml
+src/*/sim/*vcd
