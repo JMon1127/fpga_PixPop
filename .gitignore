@@ -2,5 +2,5 @@ ghdl/*ghw
 ghdl/*cf
 src/*/sim/__pycache__/*
 src/*/sim/sim_build/
-src/*/sim/*xml
-src/*/sim/*vcd
+src/*/sim/*.xml
+src/*/sim/*.ghw
