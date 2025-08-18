@@ -46,8 +46,7 @@ architecture rtl of sobel_edge_det is
   -- Types
   --------------------
   type t_line_buffer  is array (0 to G_IMG_ROW_SIZE-1) of std_logic_vector(G_PIXEL_SIZE - 1 downto 0);
-  type t_window3x3    is array (0 to 2, 0 to 2) of std_logic_vector(G_PIXEL_SIZE - 1 downto 0);
-  type t_sobel_kernel is array (0 to 2, 0 to 2) of integer;
+  type t_window3x3    is array (0 to 2, 0 to 2)        of std_logic_vector(G_PIXEL_SIZE - 1 downto 0);
 
   --------------------
   -- Constants
@@ -60,19 +59,28 @@ architecture rtl of sobel_edge_det is
   signal s_window3x3_valid : std_logic;
 
   -- counters
-  signal s_col_cnt   : integer := 0;
-  signal s_row_cnt   : integer := 0;
+  signal s_col_cnt         : integer := 0;
+  signal s_row_cnt         : integer := 0;
 
   -- line buffers
   signal s_line_buffer0, s_line_buffer1                 : t_line_buffer;
-  signal s_line_buffer0_rd_data, s_line_buffer1_rd_data : std_logic_vector(G_PIXEL_SIZE - 1 downto 0);
-  signal s_lb_wr_addr                                   : unsigned(G_LB_ADDRESS_WIDTH - 1 downto 0);
-  signal s_lb_rd_addr                                   : unsigned(G_LB_ADDRESS_WIDTH - 1 downto 0);
+  signal s_line_buffer0_rd_data, s_line_buffer1_rd_data : std_logic_vector(      G_PIXEL_SIZE - 1 downto 0);
+  signal s_lb_wr_addr                                   :         unsigned(G_LB_ADDRESS_WIDTH - 1 downto 0);
+  signal s_lb_rd_addr                                   :         unsigned(G_LB_ADDRESS_WIDTH - 1 downto 0);
+
+  -- sobel calc
+  signal s_gx_pos                                       :           signed(      G_PIXEL_SIZE + 4 downto 0);
+  signal s_gx_neg                                       :           signed(      G_PIXEL_SIZE + 4 downto 0);
+  signal s_gy_pos                                       :           signed(      G_PIXEL_SIZE + 4 downto 0);
+  signal s_gy_neg                                       :           signed(      G_PIXEL_SIZE + 4 downto 0);
+  signal s_gx_tot                                       :           signed(      G_PIXEL_SIZE + 4 downto 0);
+  signal s_gy_tot                                       :           signed(      G_PIXEL_SIZE + 4 downto 0);
+
 
 begin
 
   -- Counters to track incoming pixels
-  process (SYS_CLK, SYS_RST_N)
+  proc_cnt : process (SYS_CLK, SYS_RST_N)
   begin
     if(SYS_RST_N = '0') then
       s_col_cnt <= 0;
@@ -97,7 +105,7 @@ begin
   s_lb_rd_addr <= to_unsigned(s_col_cnt, s_lb_rd_addr'length);
 
   -- line buffer 0
-  process (SYS_CLK)
+  proc_lb0 : process (SYS_CLK)
   begin
     if(rising_edge(SYS_CLK)) then
       s_line_buffer0_rd_data <= s_line_buffer0(to_integer(s_lb_rd_addr));
@@ -109,7 +117,7 @@ begin
   end process;
 
   -- line buffer 1
-  process (SYS_CLK)
+  proc_lb1 : process (SYS_CLK)
   begin
     if(rising_edge(SYS_CLK)) then
       s_line_buffer1_rd_data <= s_line_buffer1(to_integer(s_lb_rd_addr));
@@ -121,7 +129,7 @@ begin
   end process;
 
   -- window
-  process (SYS_CLK, SYS_RST_N)
+  proc_window : process (SYS_CLK, SYS_RST_N)
   begin
     if(SYS_RST_N = '0') then
       s_window3x3 <= (others => (others => (others => '0')));
@@ -145,5 +153,31 @@ begin
 
   -- the window is after first two rows and columns are streamed in
   s_window3x3_valid <= '1' when (I_GS_DATA_VALID = '1' and s_row_cnt >= 2 and s_col_cnt >= 3) else '0';
+
+  -- Sobel Calc
+  --      |-1, 0, 1|        |-1, -2, -1|
+  -- Gx = |-2, 0, 2|   Gy = | 0,  0,  0|   G = sqrt(Gx^2 + Gy^2)
+  --      |-1, 0, 1|        | 1,  2,  1|
+  process (SYS_CLK, SYS_RST_N)
+  begin
+    if(SYS_RST_N = '0') then
+
+    elsif(rising_edge(SYS_CLK)) then
+      if(s_window3x3_valid = '1') then
+        -- x calcs
+        s_gx_pos <= signed(resize(unsigned(s_window3x3(0,2)), s_gx_pos'length) + shift_left(resize(unsigned(s_window3x3(1,2)), s_gx_pos'length), 1) + resize(unsigned(s_window3x3(2,2)), s_gx_pos'length));
+        s_gx_neg <= signed(resize(unsigned(s_window3x3(0,0)), s_gx_pos'length) + shift_left(resize(unsigned(s_window3x3(1,0)), s_gx_pos'length), 1) + resize(unsigned(s_window3x3(2,0)), s_gx_pos'length));
+        s_gx_tot <= s_gx_pos - s_gx_neg;
+
+        -- y calcs
+        s_gy_pos <= signed(resize(unsigned(s_window3x3(2,0)), s_gy_pos'length) + shift_left(resize(unsigned(s_window3x3(2,1)), s_gy_pos'length), 1) + resize(unsigned(s_window3x3(2,2)), s_gy_pos'length));
+        s_gy_neg <= signed(resize(unsigned(s_window3x3(0,0)), s_gy_pos'length) + shift_left(resize(unsigned(s_window3x3(0,1)), s_gy_pos'length), 1) + resize(unsigned(s_window3x3(0,2)), s_gy_pos'length));
+        s_gy_tot <= s_gy_pos - s_gy_neg;
+
+        -- need to get magnitude
+
+      end if;
+    end if;
+  end process;
 
 end architecture rtl;
