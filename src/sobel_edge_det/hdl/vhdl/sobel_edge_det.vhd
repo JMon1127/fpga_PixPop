@@ -51,6 +51,7 @@ architecture rtl of sobel_edge_det is
   --------------------
   -- Constants
   --------------------
+  constant c_max_pix_value : unsigned(G_PIXEL_SIZE - 1 donwto 0) := (others => '1');
 
   --------------------
   -- Signals
@@ -75,7 +76,10 @@ architecture rtl of sobel_edge_det is
   signal s_gy_neg                                       :           signed(      G_PIXEL_SIZE + 4 downto 0);
   signal s_gx_tot                                       :           signed(      G_PIXEL_SIZE + 4 downto 0);
   signal s_gy_tot                                       :           signed(      G_PIXEL_SIZE + 4 downto 0);
-
+  signal s_gx_mag                                       :         unsigned(      G_PIXEL_SIZE + 4 downto 0);
+  signal s_gy_mag                                       :         unsigned(      G_PIXEL_SIZE + 4 downto 0);
+  signal s_g_mag_total                                  :         unsigned(      G_PIXEL_SIZE + 5 downto 0);
+  signal s_g_mag_pix                                    :         unsigned(          G_PIXEL_SIZE downto 0);
 
 begin
 
@@ -175,6 +179,32 @@ begin
         s_gy_tot <= s_gy_pos - s_gy_neg;
 
         -- need to get magnitude
+        -- so if either total is negative we want to remove the sign from it
+        -- start by checking the sign bit indicating number is pos or neg
+        if(s_gx_tot'high = '1') then
+          -- neg number so invert and add 1
+          s_gx_mag = unsigned((not s_gx_tot) + 1);
+        else
+          s_gx_mag = unsigned(s_gx_tot)
+        end if;
+
+        if(s_gy_tot'high = '1') then
+          -- neg number so invert and add 1
+          s_gy_mag = unsigned((not s_gy_tot) + 1);
+        else
+          s_gy_mag = unsigned(s_gy_tot)
+        end if;
+
+        -- add the two magnitudes together ensuring bit widths align
+        s_g_mag_total <= resize(s_gx_mag, s_g_mag_total'length) + resize(s_gy_mag, s_g_mag_total'length);
+
+        -- check if the magnitude should be clamped down to input pixel size bits
+        -- i.e any value that exceeds the max pixel value gets assigned the max pixel value
+        if(s_g_mag_total > c_max_pix_value) then
+          s_g_mag_pix <= c_max_pix_value;
+        else
+          s_g_mag_pix <= resize(s_g_mag_total, s_g_mag_pix'legnth);
+        end if;
 
       end if;
     end if;
