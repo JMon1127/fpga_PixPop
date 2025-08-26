@@ -165,7 +165,16 @@ begin
   process (SYS_CLK, SYS_RST_N)
   begin
     if(SYS_RST_N = '0') then
-
+      s_gx_pos      <= (others => '0');
+      s_gx_neg      <= (others => '0');
+      s_gx_tot      <= (others => '0');
+      s_gy_pos      <= (others => '0');
+      s_gy_neg      <= (others => '0');
+      s_gy_tot      <= (others => '0');
+      s_gx_mag      <= (others => '0');
+      s_gy_mag      <= (others => '0');
+      s_g_mag_total <= (others => '0');
+      s_g_mag_pix   <= (others => '0');
     elsif(rising_edge(SYS_CLK)) then
       if(s_window3x3_valid = '1') then
         -- x calcs
